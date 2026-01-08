@@ -1,0 +1,224 @@
+/* ==================================================
+   REGISTER PAGE LAYOUT
+================================================== */
+.register-page {
+  min-height: 85vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ==================================================
+   CONTAINER
+================================================== */
+.register-container {
+  max-width: 45rem;
+  margin-bottom: 1.6rem;
+  padding: 2rem;
+}
+
+/* ==================================================
+   REGISTER FORM
+================================================== */
+.formRegister {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+  margin-bottom: 1rem;
+
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius_04);
+
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+/* Dark theme form */
+.dark .formRegister {
+  background-color: #1e1e1e;
+  color: #2e2e2e;
+}
+
+/* ==================================================
+   FORM FIELD (LABEL + INPUT)
+================================================== */
+.formR-name {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 1rem;
+
+  padding: 1rem 2rem;
+  border-radius: 0.4rem;
+
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
+}
+
+.formR-name label {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #535256;
+  white-space: nowrap;
+}
+
+.formR-name input {
+  width: 100%;
+  height: 3rem;
+  padding: 0.6rem;
+
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  box-shadow: inset 0 0 4px #000;
+}
+
+/* ==================================================
+   CAPTCHA
+================================================== */
+.captcha {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.dark .captcha {
+  box-shadow: inset 0 0 4px #2e2e2e;
+}
+
+.hidden {
+  display: none;
+}
+
+/* ==================================================
+   REGISTER BUTTON
+================================================== */
+.register-button {
+  padding: 0.6rem 1.2rem;
+  font-size: 1.6rem;
+  font-weight: 500;
+
+  border: 2px solid #dccfcf;
+  border-radius: var(--border-radius_04);
+
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Button themes */
+.dark .register-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  color: #fff;
+}
+
+.light .register-button {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #333;
+}
+
+/* Hover only if enabled */
+.dark .register-button:not(:disabled):hover,
+.light .register-button:not(:disabled):hover {
+  transform: scale(1.05);
+  background-color: #a2dfa5;
+  color: #2e2e2e;
+}
+
+/* ==================================================
+   GO TO LOGIN BLOCK
+================================================== */
+.go-to-login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+
+  padding: 0.8rem;
+  font-size: small;
+
+  border-radius: var(--border-radius_04);
+  background-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
+}
+
+/* Dark theme */
+.dark .go-to-login {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+/* Login link */
+.go-to-login-link {
+  padding: 0.4rem 0.8rem;
+  font-weight: bold;
+  text-align: center;
+
+  border-radius: 0.4rem;
+  box-shadow: inset 0 0 4px #000;
+}
+
+/* Link hover */
+.dark .go-to-login-link:hover,
+.light .go-to-login-link:hover {
+  transform: scale(1.05);
+  background-color: #a2dfa5;
+}
+
+/* Dark link */
+.dark .go-to-login-link {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #333;
+}
+/* ====================================================
+    PASSWORD VISIBILITY TOGGLE
+==================================================== */
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-input {
+  width: 100%;
+  padding-right: 2.5rem; /* место под иконку */
+}
+
+.password-icon {
+  position: absolute;
+  right: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #777;
+}
+
+/* ==================================================
+   RESPONSIVE (MOBILE)
+================================================== */
+@media (max-width: 640px) {
+  .formR-name {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+
+  .formR-name label {
+    font-size: 1rem;
+  }
+
+  .formR-name input {
+    height: 2.8rem;
+    font-size: 0.95rem;
+  }
+
+  .captcha {
+    transform: scale(0.85);
+    transform-origin: center top;
+    margin-bottom: 0;
+  }
+}

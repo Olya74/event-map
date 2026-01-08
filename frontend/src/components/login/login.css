@@ -1,0 +1,234 @@
+/* ===============================
+   PAGE
+================================ */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: end;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+/* ===============================
+   CONTAINER
+================================ */
+.login-container {
+  max-width: 45rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ===============================
+   FORM
+================================ */
+.formLogin {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+  border-radius: var(--border-radius_04);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* ==============================
+THEMES 
+================================ */
+.light .formLogin {
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(5px);
+}
+
+.dark .formLogin {
+  background-color: #333;
+}
+
+/* ===============================
+   FORM FIELD
+================================ */
+.form-name {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--border-radius_04);
+}
+
+.form-name label {
+  font-size: small;
+  font-weight: bold;
+  color: #535256;
+}
+
+.dark .form-name label {
+  color: #ddd;
+}
+
+.form-name input {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: var(--border-radius_04);
+  box-shadow: inset 0 0 5px #000;
+  border: none;
+  font-size: small;
+}
+
+/*================================
+ input focus 
+================================*/
+.form-name input:focus {
+  outline: 2px solid #87a392;
+  outline-offset: 2px;
+}
+
+/*===============================
+ dark input 
+================================ */
+.dark .form-name input {
+  background-color: #222;
+  color: #fff;
+}
+
+.dark .form-name input::placeholder {
+  color: #aaa;
+}
+
+/* ===============================
+   BUTTON
+================================ */
+.btnLog {
+  padding: 0.8rem 1.2rem;
+  font-size: small;
+  font-weight: 500;
+  border-radius: var(--border-radius_04);
+  border: 2px solid #dccfcf;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* ==================================
+button themes 
+====================================*/
+.light .btnLog {
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+  color: #333;
+}
+
+.dark .btnLog {
+  background-color: #a04035;
+  color: white;
+}
+
+/*==================================
+    BUTTON
+ hover + focus 
+ ===================================*/
+.light .btnLog:hover,
+.light .btnLog:focus-visible {
+  background-color: #588aab;
+}
+
+.dark .btnLog:hover,
+.dark .btnLog:focus-visible {
+  background-color: #d6d5b6;
+  color: #150624;
+}
+
+/* ===============================
+   GO TO REGISTER
+================================ */
+.go-to-register {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 1rem;
+  padding: 0.8rem;
+  font-size: small;
+  border-radius: var(--border-radius_04);
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: #588aab;
+}
+
+.go-to-register::after {
+  content: "";
+  width: 80%;
+  height: 6px;
+  background-color: #ccc;
+}
+
+.auth-text {
+  display: flex;
+  gap: 0.5rem;
+  font-weight: bold;
+}
+
+.go-to-register-link {
+  padding: 0.6rem 1rem;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 0.4rem;
+  box-shadow: inset 2px 2px 5px #000;
+  text-decoration: none;
+}
+
+/*===========================================
+    Go to register link themes 
+============================================*/
+.light .go-to-register-link {
+  background-color: #58615dae;
+  color: #fff;
+}
+
+.light .go-to-register-link:hover {
+  background-color: #87a392;
+}
+
+.dark .go-to-register-link {
+  background-color: #444;
+  color: #fff;
+}
+
+.dark .go-to-register-link:hover {
+  background-color: #666;
+}
+
+/* ====================================================
+    PASSWORD VISIBILITY TOGGLE
+==================================================== */
+.login-password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.login-password-input {
+  width: 100%;
+  padding-right: 2.5rem; /* место под иконку */
+}
+
+.login-password-icon {
+  position: absolute;
+  right: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #777;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 200px) {
+  .auth-text {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+@media (max-width: 640px) {
+  .form-name {
+    grid-template-columns: 1fr;
+  }
+}

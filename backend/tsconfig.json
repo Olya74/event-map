@@ -1,0 +1,107 @@
+// {
+//   // Visit https://aka.ms/tsconfig to read more about this file
+//   "compilerOptions": {
+//     // File Layout
+//      "rootDir": "./src",
+//      "outDir": "./dist",
+//       "typeRoots": ["./node_modules/@types", "src/types"],
+
+//     // Environment Settings
+//     // See also https://aka.ms/tsconfig/module
+//     "module": "nodenext",
+//     "moduleResolution": "nodenext",
+//     //"target": "esnext",
+//      "target": "ES2022",
+//     //"types": [],
+//     // For nodejs:
+//      "lib": ["esnext"],
+//      "types": ["node"],
+//     // and npm install -D @types/node
+
+//     // Other Outputs
+//     "sourceMap": true,
+//     "declaration": true,
+//     "declarationMap": true,
+
+//     // Stricter Typechecking Options
+//     "noUncheckedIndexedAccess": true,
+//     "exactOptionalPropertyTypes": true,
+
+//     // Style Options
+//     // "noImplicitReturns": true,
+//     // "noImplicitOverride": true,
+//     // "noUnusedLocals": true,
+//     // "noUnusedParameters": true,
+//     // "noFallthroughCasesInSwitch": true,
+//     // "noPropertyAccessFromIndexSignature": true,
+
+//     // Recommended Options
+//     "strict": true,
+//     "jsx": "react-jsx",
+//     "noImplicitAny": true,
+//     "strictNullChecks": true,
+//     "verbatimModuleSyntax": true,
+//     "isolatedModules": true,
+//     "noUncheckedSideEffectImports": true,
+//     "moduleDetection": "force",
+//     "skipLibCheck": true,
+//     "esModuleInterop": true,
+//     "forceConsistentCasingInFileNames": true,
+//   },
+//   "include": ["src/**/*.ts"],
+//   "exclude": ["node_modules", "dist"]
+// }
+//////////////////////////////////////////////////////////////////////
+
+  // Visit https://aka.ms/tsconfig to read more about this file
+{
+  "compilerOptions": {
+     "baseUrl": ".",
+    "paths": {
+     "@event-map/shared": ["../packages/shared/dist"]
+    },
+    // File Layout
+    "rootDir": "./src",
+    "outDir": "./dist",
+ "typeRoots": ["./node_modules/@types", "src/types"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+
+    "target": "ES2022",
+    "lib": ["esnext"],
+    "types": ["node"],
+
+    "strict": true,
+    "skipLibCheck": true,
+
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
+  },
+
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
+////////////////////////////////////////////////////////////////////////////
+// {
+//   "compilerOptions": {
+//     "rootDir": "./src",
+//     "outDir": "./dist",
+
+//     "module": "nodenext",
+//     "moduleResolution": "nodenext",
+
+//     "target": "ES2022",
+//     "lib": ["esnext"],
+//     "types": ["node"],
+
+//     "strict": true,
+//     "skipLibCheck": true,
+
+//     "esModuleInterop": true,
+//     "forceConsistentCasingInFileNames": true
+//   },
+
+//   "include": ["src/**/*.ts"],
+//   "exclude": ["node_modules", "dist"]
+// }
+

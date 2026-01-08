@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  font-size: 62.5%;
+  /* Базовый индекс — чувствителен к размеру окна */
+  --index: calc(1vw+1vh);
+  /* Универсальные размеры на основе индекса */
+  --fs-base: clamp(16px, calc(var(--index) * 1.2), 48px);
+  --fs-title: clamp(22px, calc(var(--index) * 2.1), 42px);
+  --border-radius_075: 0.75rem;
+  --border-radius_04: 0.4rem;
+  --padding-login-btn: clamp(8px, calc(var(--index) * 0.8), 16px);
+  --bg-create: rgba(255, 255, 255, 0.5);
+  --bg-dark: background-image: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  --my-animationBgmove:bgMove 20s ease-in-out infinite alternate ;
+}
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
+html {
+  font-size: var(--fs-base);
+}
+body {
+  transition: background-color 0.15s, color 0.15s;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f5f5f5;
+   margin: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  /* стили для тёмной темы */
+  body {
+    background-color: #8c8686;
+    color: #f5f5f5;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  /* стили для светлой темы */
+  body {
+    background-color: #f5f5f5;
+    color: #333;
+  }
+}
+
+.bg-register.light {
+ background-color: #f5f5f5;
+  background-image: url("/berlin.webp");
+  background-size: cover ;
+  background-position:left center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+.bg-register.dark {
+    background:#f5f5f5;
+
+ } 
+
+.bg-login.light {
+  background-color: #f5f5f5;
+  /* background-image: url("/bg1.png"); */
+  background-image: url("/berlin.webp");
+  background-size: cover ;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+.bg-default.light {
+  background-color: #f5f5f5;
+  background-image: url("/berlin.webp");
+  background-size: cover ;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+.bg-default.dark {
+  background-color: #f5f5f5;
+  background-image: url("/berlin.webp");
+  background-size: cover ;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+.bg-login.dark {
+   background-color: #f5f5f5;
+  background-image: url("/berlin.webp");
+  background-size: cover ;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;    
+  }
+
+  .bg-map {
+    background-color: #f5f5f5;
+    color: #746c6c;
+  }
+
+
+     @keyframes bgMove {
+    0% { opacity: 0.7; transform: scaleX(0.9); background-position: 50% 40%; }
+    100% { opacity: 0.9; transform: scaleX(1); background-position: 50% 60%; }
+  }
+  
+  

@@ -1,0 +1,8 @@
+.img-text {
+  background-image: url("/bg1.png");
+  background-size: cover;
+  background-position: center;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text; /* обязательно */
+}

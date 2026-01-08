@@ -1,0 +1,9 @@
+
+.dark .footer {
+  background-color: #1e1e1e;
+    color: #ffffff;
+}
+.light .footer {
+  background-color:#dffce2;
+  color: #58615dae;
+}

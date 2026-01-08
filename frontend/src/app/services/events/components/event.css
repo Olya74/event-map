@@ -1,0 +1,72 @@
+/*==============================
+Event Container
+=================================*/
+.event-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+  justify-self: center;
+  align-items: center;
+  padding: 0 5rem;
+}
+
+.event__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding-right: 0.5rem;
+  justify-content: center;
+  align-items: start;
+}
+.event__title {
+  font-size: 6rem;
+  font-weight: 400;
+  font-family: "Rubik Gemstones", system-ui;
+  background-image: url("/balloons.jpg");
+  background-size: cover;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* ===============================================
+Event Card
+================================================*/
+.event__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+/* ==============================
+Create Event Theme
+================================= */
+.create-event.light {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: black;
+}
+
+.create-event.dark {
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  color: white;
+}
+.create-event.dark .form-field,
+.create-event.dark input::placeholder {
+  color: white;
+}
+.create-event.light .form-field {
+  color: #6b7280;
+}
+
+.create-event.dark input[type="date"] {
+  color-scheme: dark;
+}
+
+.create-event.dark select option {
+  background-color: #313131ec;
+  color: white;
+}
