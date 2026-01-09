@@ -37,6 +37,7 @@ export const authSlice = createSlice({
         state.user.avatar = action.payload;
       }
     },
+   
   },
 });
 

@@ -18,7 +18,7 @@ class MailService {
   async sendActivationMail(to: string, link: string) {
     const mailOptions = {
       from: process.env.EMAIL_USER,
-      to: to, 
+      to:process.env.EMAIL_USER ,// to, 
       subject: "Account Activation on " + process.env.API_URL,
       text: "",
       html: `<div>

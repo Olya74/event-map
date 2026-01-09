@@ -219,5 +219,29 @@ class EventService {
     }
     return events;
   }
+  async joinEvent(eventId: string, userId: Types.ObjectId) {
+    const event = await Event.findById(eventId);
+    if (!event) {
+      throw ErrorHandler.NotFoundError("Event not found");
+    } 
+    if (event.attendees.includes(userId)) {
+      throw ErrorHandler.ValidationError("User already joined the event");
+    } 
+    event.attendees.push(userId);
+    await event.save();
+    return { message: "Successfully joined the event.", event };
+  }
+  async leaveEvent(eventId: string, userId: Types.ObjectId) {
+    const event = await Event.findById(eventId);
+    if (!event) {
+      throw ErrorHandler.NotFoundError("Event not found");
+    } 
+    if (!event.attendees.includes(userId)) {
+      throw ErrorHandler.ValidationError("User is not an attendee of the event");
+    }
+    event.attendees = event.attendees.filter((id) => !id.equals(userId));
+    await event.save();
+    return { message: "Successfully left the event." };
+  }
 }
 export default new EventService();

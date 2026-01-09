@@ -1,7 +1,7 @@
 import type { FC } from "react";
 import type { IEvent } from "../../../models/IEvent";
 import { NavLink } from "react-router-dom";
-import { useDeleteEventMutation } from "../EventService";
+import { useDeleteEventMutation, useJoinEventMutation,useLeaveEventMutation } from "../EventService";
 import nullBeforeDate from "../../../../helpers/functions/nullBeforeDate";
 import { useAppSelector } from "../../../hooks/hooks";
 import { selectedCurrentUser } from "../../../features/auth/authSlice";
@@ -9,16 +9,20 @@ import ErrorMessage from "../../../../components/errors/ErrorMessage";
 import Success from "../../../../components/success/Success";
 import { useEffect, useState } from "react";
 import { getErrorMessage } from "../../../../helpers/functions/errorHelper";
+import { useNavigate } from "react-router-dom";
 
 interface EventItemProps {
   event: IEvent;
 }
 
 const EventItem: FC<EventItemProps> = ({ event }) => {
+  const navigate = useNavigate();
   const currentUser = useAppSelector(selectedCurrentUser);
   const isOwner = event.creator === currentUser?.id;
-
+  const isJoined=event.attendees.includes(currentUser?.id || "");
   const [deleteEvent, { isLoading }] = useDeleteEventMutation();
+  const [joinEvent,{isLoading: isJoining}] = useJoinEventMutation();
+  const [leaveEvent, {isLoading: isLeaving}] = useLeaveEventMutation();
   const [errorMsg, setErrorMsg] = useState<string | null>("");
   const [successMsg, setSuccessMsg] = useState<string | null>("");
 
@@ -30,6 +34,24 @@ const EventItem: FC<EventItemProps> = ({ event }) => {
     }, 2000);
     return () => clearTimeout(timer);
   }, [errorMsg, successMsg]);
+ 
+const handleJoinToggle = async (idEvent: string,idUser: string) => {
+   if (!currentUser) {
+    navigate("/login");
+    return;
+  }
+    try {
+      if (isJoined) {
+        const res = await leaveEvent({ eventId: idEvent,userId: idUser }).unwrap();
+        setSuccessMsg(res.message);
+      } else {
+        const res = await joinEvent({ eventId: idEvent, userId: idUser  }).unwrap();
+        setSuccessMsg(res.message);
+      }
+    } catch(err: any) {
+      setErrorMsg(getErrorMessage(err, "Failed to join the event."));
+    }
+  };
 
   const handleDelete = async () => {
     try {
@@ -69,9 +91,9 @@ const EventItem: FC<EventItemProps> = ({ event }) => {
         </p>
         <p>
           <span className="font-medium">Address:</span>{" "}
-          {event.address?.street !== "not specified" && event.address?.street}{" "}
-          {event.address?.number !== "not specified" && event.address?.number}{" "}
-          {event.address?.zip !== "not specified" && event.address?.zip} Berlin
+          {event.address?.street !== "Not specified" && event.address?.street}{" "}
+          {event.address?.number !== "Not specified" && event.address?.number}{" "}
+          {event.address?.zip !== "Not specified" && event.address?.zip} Berlin
         </p>
       </div>
 
@@ -91,14 +113,16 @@ const EventItem: FC<EventItemProps> = ({ event }) => {
       <footer className="mt-auto pt-4 border-t flex justify-between items-center ">
         {!isOwner ? (
           <button
-            className="
-              px-4 py-2 rounded-lg
-              border border-green-600 text-green-600
-              hover:bg-green-600 hover:text-white
-              transition-colors
-            "
+            className={`
+    px-4 py-2 rounded-lg transition
+    ${isJoined
+      ? "bg-green-600 text-white cursor-default"
+      : "border border-green-600 text-green-600 hover:bg-green-600 hover:text-white"}
+  `}
+            onClick={() => handleJoinToggle(event._id,currentUser?.id || "")}
+            disabled={isJoining || isLeaving}
           >
-            Join
+           {isJoined ? "Cancel" : "Join"}
           </button>
         ) : (
           <div className="flex gap-4 justify-between items-center w-full">

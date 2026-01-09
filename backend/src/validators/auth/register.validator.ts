@@ -5,21 +5,26 @@ export const registerValidator = [
   body("email")
     .trim()
     .notEmpty()
-    .escape()
     .isEmail()
-    .withMessage("Ungültiges E-Mail-Format")
+    .withMessage("Non-valid email format")
     .normalizeEmail(),
 
   body("password")
-    .trim()
     .notEmpty()
     .isLength({ min: 8 })
-    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[?!])[0-9a-zA-Z?!]{8,}$/)
-    .withMessage("Passwort muss mindestens 8 Zeichen lang sein"),
+    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^\w\s]).{8,}$/)
+    // .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[?!])[0-9a-zA-Z?!]{8,}$/)
+    .withMessage(
+      "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character (? or !)"
+    ),
 
-  body("username")
-    .isString()
+  body("name")
+    .trim()
+    .notEmpty()
     .isLength({ min: 2, max: 30 })
-    .withMessage("Benutzername muss mindestens 2 Zeichen lang sein"),
+    .withMessage(
+      "Username must be at least 2 characters long and max 30 characters long"
+    ),
+
   validate,
 ];

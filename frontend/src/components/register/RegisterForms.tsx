@@ -34,7 +34,7 @@ const RegisterForms = () => {
     const timeoutId = setTimeout(() => {
       setErrMsg("");
       setSuccessMsg("");
-    }, 5000);
+    }, 4000);
 
     return () => clearTimeout(timeoutId);
   }, [form.email, form.password, confirmPassword, captchaToken, form.name]);

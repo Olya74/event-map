@@ -119,6 +119,33 @@ const getJoinedEvents = async (req: Request, res: Response, next: NextFunction) 
     next(error);
   }
 };
+const joinEvent = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user?.id;
+    const eventId = req.params.id;
+    if (!userId) {
+      throw ErrorHandler.ValidationError("Unauthorized");
+    }
+    await eventService.joinEvent(eventId, userId);
+    res.status(200).json({ message: "Successfully joined the event" });
+  } catch (error) {
+    next(error);
+  }
+};
+const leaveEvent = async (req: Request, res: Response, next: NextFunction) => {
+  console.log("leaveEvent controller called");
+  try {
+    const userId = req.user?.id;
+    const eventId = req.params.id;
+    if (!userId) {
+      throw ErrorHandler.ValidationError("Unauthorized");
+    }
+    await eventService.leaveEvent(eventId, userId);
+    res.status(200).json({ message: "Successfully left the event" });
+  } catch (error) {
+    next(error);
+  }
+};
 export {
   createEvent,
   getAllEvents,
@@ -126,5 +153,7 @@ export {
   getEventById,
   updateEventById,
   getMyEvents,
-  getJoinedEvents
+  getJoinedEvents,
+  joinEvent,
+  leaveEvent
 };
