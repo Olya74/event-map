@@ -2,7 +2,6 @@ import type { IAvatar, IUserResponse } from "../../models/UserTypes";
 import { apiSlice } from "../../api/apiSlice";
 import { updateAvatar } from "../../features/auth/authSlice";
 
-
 export const usersApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getUserById: builder.query<IUserResponse, string>({
@@ -16,16 +15,20 @@ export const usersApi = apiSlice.injectEndpoints({
     }),
     getUsers: builder.query<IUserResponse[], void>({
       query: () => "/users",
-      providesTags: (result, error) => result
-        ? [
-            ...result.map(({ id }) => ({ type: "User" as const, id })),
-            { type: "User", id: "LIST" },
-          ]
-        : error?.status === 401
-        ? ["UNAUTHORIZED"]
-        : ["UNKNOWN_ERROR"],
+      providesTags: (result, error) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "User" as const, id })),
+              { type: "User", id: "LIST" },
+            ]
+          : error?.status === 401
+          ? ["UNAUTHORIZED"]
+          : ["UNKNOWN_ERROR"],
     }),
-     sendEmail: builder.mutation<any, { from: string; to: string; subject: string; text: string }>({
+    sendEmail: builder.mutation<
+      any,
+      { from: string; to: string; subject: string; text: string }
+    >({
       query: ({ from, to, subject, text }) => ({
         url: "/users/send-email",
         method: "POST",

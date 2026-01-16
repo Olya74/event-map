@@ -4,34 +4,61 @@ import "./login.css";
 import { useLoginMutation } from "../../app/features/auth/authApiSlice";
 import { useAppDispatch } from "../../app/hooks/hooks";
 import { setCredentials } from "../../app/features/auth/authSlice";
-import ErrorMessage from "../errors/ErrorMessage";
 import Success from "../success/Success";
 import { useThema } from "../../context/ThemaContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { getErrorMessage } from "../../helpers/functions/errorHelper";
+import {getErrorMessageForm} from "../../helpers/functions/errorHelper";
+import useDebounce from "../../hooks/useDebounce";
+import { isValidEmail,isValidPassword } from "./loginValidation";
+import ErrorFormMessage from "../errors/ErrorFormMessage";
+
 
 const LoginForm = () => {
   const [login] = useLoginMutation();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
-  const [errMsg, setErrMsg] = useState("");
+  const debouncedForm=useDebounce({value:form, delay:1000});
+  const [errMsg, setErrMsg] = useState<{
+    email?: string;
+    password?: string;
+    form?: string;
+  }>({});
   const [successMsg, setSuccessMsg] = useState("");
   const successRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
   const errRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLInputElement>(null);
   const { thema } = useThema();
-
+  const hasErrors=Object.values(errMsg).some(Boolean);
+ 
   useEffect(() => {
     userRef.current?.focus();
   }, []);
 
   useEffect(() => {
-    setErrMsg("");
-    setSuccessMsg("");
-  }, [form.email, form.password]);
+  if (!debouncedForm.email) return;
+
+  setErrMsg((e) => ({
+    ...e,
+    email: isValidEmail(debouncedForm.email)
+      ? undefined
+      : "Некорректный email",
+  }));
+}, [debouncedForm.email]);
+
+useEffect(() => {
+  if (!debouncedForm.password) return;
+
+  setErrMsg((e) => ({
+    ...e,
+    password: isValidPassword(debouncedForm.password)
+      ? undefined
+      : "Некорректный пароль",
+  }));
+}, [debouncedForm.password]);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -39,6 +66,20 @@ const LoginForm = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!form.email || !form.password) {
+  setErrMsg({ form: "Email and password are required" });
+  return;
+}
+
+if (!isValidEmail(form.email)) {
+  setErrMsg({ email: "Invalid email format" });
+  return;
+}
+
+if (!isValidPassword(form.password)) {
+  setErrMsg({ password: "Invalid password format" });
+  return;
+}
     try {
       const response = await login(form).unwrap();
       const userData = response.userData;
@@ -54,11 +95,11 @@ const LoginForm = () => {
         setForm({ email: "", password: "" });
         navigate("/profile");
       }, 1000);
-    } catch (err: any) {
-      if (!err?.status) {
-        setErrMsg("No Server Response");
+    } catch (err: unknown) {
+      if (!(err as any)?.status) {
+        setErrMsg({ form: "No server response" });
       } else {
-        setErrMsg(getErrorMessage(err, "Login failed"));
+        setErrMsg({ form: getErrorMessageForm(err, "Login failed") });
       }
       errRef.current?.focus();
     }
@@ -66,7 +107,7 @@ const LoginForm = () => {
 
   return (
     <section className={`login-container`}>
-      {errMsg && <ErrorMessage error={errMsg} ref={errRef} />}
+      {hasErrors && <ErrorFormMessage error={errMsg} ref={errRef} />}
       {successMsg && <Success success={successMsg} ref={successRef} />}
       <form onSubmit={handleSubmit} className={`formLogin ${thema}`}>
         <div className="form-name">

@@ -9,6 +9,14 @@ export const eventAPI = apiSlice.injectEndpoints({
         `/events?page=${page}&limit=${limit}&sortBy=${sortBy}&sortDirection=${sortDirection}`,
       providesTags: () => [{ type: "Event" }],
     }),
+    getUpcommingEvents: build.query<
+      EventResponse,
+      { page: number; limit: number }
+    >({
+      query: ({ page, limit }) =>
+        `/events/upcomming?page=${page}&limit=${limit}`,
+      providesTags: () => [{ type: "Event" }],
+    }),
     createEvent: build.mutation<any, FormData>({
       query: (formData) => ({
         url: "/events/create-event",
@@ -49,57 +57,55 @@ export const eventAPI = apiSlice.injectEndpoints({
       query: () => "/events/joined",
       providesTags: () => [{ type: "Event" }],
     }),
-   joinEvent: build.mutation<{ message: string; event: IEvent }, { eventId: string; userId: string }>({
-  query: ({ eventId }) => ({
-    url: `/events/${eventId}/join`,
-    method: "POST",
-  }),
-  invalidatesTags: ()=> [{ type: "Event" }],
-  async onQueryStarted(
-    { eventId, userId },
-    { dispatch, queryFulfilled }
-  ) {
-    const patch = dispatch(
-      eventAPI.util.updateQueryData("getEventById", eventId, (draft) => {
-        if (!draft.attendees.includes(userId)) {
-          draft.attendees.push(userId);
+    joinEvent: build.mutation<
+      { message: string; event: IEvent },
+      { eventId: string; userId: string }
+    >({
+      query: ({ eventId }) => ({
+        url: `/events/${eventId}/join`,
+        method: "POST",
+      }),
+      invalidatesTags: () => [{ type: "Event" }],
+      async onQueryStarted({ eventId, userId }, { dispatch, queryFulfilled }) {
+        const patch = dispatch(
+          eventAPI.util.updateQueryData("getEventById", eventId, (draft) => {
+            if (!draft.attendees.includes(userId)) {
+              draft.attendees.push(userId);
+            }
+          })
+        );
+
+        try {
+          await queryFulfilled;
+        } catch {
+          patch.undo();
         }
-      })
-    );
+      },
+    }),
 
-    try {
-      await queryFulfilled;
-    } catch {
-      patch.undo();
-    }
-  },
-}),
-
-     leaveEvent: build.mutation<{ message: string }, { eventId: string; userId: string }>({
+    leaveEvent: build.mutation<
+      { message: string },
+      { eventId: string; userId: string }
+    >({
       query: ({ eventId, userId }) => ({
         url: `/events/${eventId}/join`,
         method: "DELETE",
       }),
-      invalidatesTags: ()=> [{ type: "Event" }],
-      async onQueryStarted(
-  { eventId, userId },
-  { dispatch, queryFulfilled }
-) {
-  const patch = dispatch(
-    eventAPI.util.updateQueryData("getEventById", eventId, (draft) => {
-      draft.attendees = draft.attendees.filter(id => id !== userId);
-    })
-  );
+      invalidatesTags: () => [{ type: "Event" }],
+      async onQueryStarted({ eventId, userId }, { dispatch, queryFulfilled }) {
+        const patch = dispatch(
+          eventAPI.util.updateQueryData("getEventById", eventId, (draft) => {
+            draft.attendees = draft.attendees.filter((id) => id !== userId);
+          })
+        );
 
-  try {
-    await queryFulfilled;
-  } catch {
-    patch.undo();
-  }
-}
-
+        try {
+          await queryFulfilled;
+        } catch {
+          patch.undo();
+        }
+      },
     }),
-  
   }),
 });
 
@@ -113,4 +119,5 @@ export const {
   useGetJoinedEventsQuery,
   useJoinEventMutation,
   useLeaveEventMutation,
+  useGetUpcommingEventsQuery,
 } = eventAPI;

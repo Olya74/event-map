@@ -21,7 +21,7 @@ const getAllEvents = async (req: Request, res: Response, next: NextFunction) => 
 
 const createEvent = async (req: Request, res: Response, next: NextFunction) => {
   const body = req.body;
- 
+console.log("createEvent controller called with body:", body);
   try {
     if (!body.title || !body.date || !body.userId) {
       return next(ErrorHandler.ValidationError("Missing required fields"));
@@ -37,6 +37,7 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
       .status(201)
       .json({ message: "Event created successfully", event: newEvent });
   } catch (error) {
+  
     next(error);
   }
 };
@@ -146,6 +147,17 @@ const leaveEvent = async (req: Request, res: Response, next: NextFunction) => {
     next(error);
   }
 };
+const getUpcommingEvents = async (req: Request, res: Response, next: NextFunction) => {
+  const { page = 1, limit = 10 } = req.query;
+  const pageNumber = Number(page);
+  const limitNumber = Number(limit);
+  try {
+    const events = await eventService.getUpcommingEvents(pageNumber, limitNumber);
+    res.status(200).json(events);
+  } catch (error) {
+    next(error);
+  }
+};
 export {
   createEvent,
   getAllEvents,
@@ -155,5 +167,6 @@ export {
   getMyEvents,
   getJoinedEvents,
   joinEvent,
-  leaveEvent
+  leaveEvent,
+  getUpcommingEvents
 };

@@ -9,7 +9,7 @@ function EventList({
   emptyText?: string;
 }) {
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] gap-6">
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] gap-6 ">
       {events && events.length > 0 ? (
         events.map((event) => <EventItem key={event._id} event={event} />)
       ) : (

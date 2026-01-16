@@ -1,0 +1,20 @@
+.slider-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 90%;
+}
+
+.slider-container {
+  overflow: hidden;
+  width: 100%;
+}
+
+.slider {
+  display: flex;
+}
+
+.slide {
+  flex-shrink: 0;
+}

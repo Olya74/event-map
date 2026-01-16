@@ -1,9 +1,12 @@
-import {createContext} from 'react'
+import {createContext} from 'react';
+import { type EventCategory } from '@event-map/shared';
 
 type MenuContextType = {
-  activeGroup?: string;
-  switchGroup: (title: string) => void;
+  activeCategory?: EventCategory;
+  switchCategory: (category: EventCategory) => void;
 };
+
 const MenuContext = createContext<MenuContextType | undefined>(undefined);
 
 export { MenuContext };
+

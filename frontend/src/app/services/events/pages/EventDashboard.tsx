@@ -18,14 +18,20 @@ export default function EventsDashboard({
       {loading ? (
         <Loader />
       ) : (
-        <div className="space-y-8">
-          <section >
+        <div className="space-y-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <section>
+            <h2 className="text-2xl font-semibold mb-4 text-gray-500 text-center">
+              My Events
+            </h2>
             {myEvents && (
               <EventsList events={myEvents} emptyText="No events created yet" />
             )}
           </section>
 
-          <section >
+          <section>
+            <h2 className="text-2xl font-semibold mb-4 text-gray-500 text-center">
+              Joined Events
+            </h2>
             {joinedEvents && (
               <EventsList events={joinedEvents} emptyText="No joined events" />
             )}

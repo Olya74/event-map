@@ -79,10 +79,11 @@ const handleJoinToggle = async (idEvent: string,idUser: string) => {
       </header>
 
       {/* DESCRIPTION */}
+      <section className="mb-4 flex-1">
       <p className="text-gray-700 leading-relaxed line-clamp-3 mb-4">
         {event.description}
       </p>
-
+      </section>
       {/* INFO */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-gray-600 mb-4">
         <p>

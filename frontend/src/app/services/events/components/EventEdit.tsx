@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useGetEventByIdQuery, useUpdateEventMutation } from "../EventService";
-import { EVENT_TYPES } from "@event-map/shared";
+import {
+  EVENT_CATEGORIES,
+  type EventCategory,
+} from "@event-map/shared";
 import type { IMedia } from "../../../models/Media";
 import Loader from "../../../../components/loading/Loader";
 import { useFilePreview } from "../../../../hooks/useFilePreview";
@@ -27,6 +30,14 @@ export const EventEdit = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>("");
   const successRef = React.useRef<HTMLDivElement>(null);
   const errRef = React.useRef<HTMLDivElement>(null);
+  const [category, setCategory] = useState<EventCategory>("other");
+
+  const [subCategory, setSubCategory] = useState<string>("other");
+  useEffect(() => {
+    if (!event) return;
+      setCategory(event.category);
+      setSubCategory(event.subCategory as string);
+  }, [event]);
 
   useEffect(() => {
     if (event?.media) {
@@ -176,6 +187,15 @@ export const EventEdit = () => {
           onSubmit={handleUpdate}
           className="w-full lg:w-1/2 flex flex-col gap-4 text-md sm:text-2xl"
         >
+          <div className="flex flex-col ">
+            <label>Date</label>
+            <input
+              type="date"
+              name="date"
+              defaultValue={event.date.split("T")[0]}
+              className={dateStyle}
+            />
+          </div>
           <div>
             <label>Title</label>
             <input
@@ -196,31 +216,70 @@ export const EventEdit = () => {
 
           <section className="grid grid-cols-1  sm:grid-cols-2 gap-4">
             <div className="flex flex-col ">
-              <label>Date</label>
-              <input
-                type="date"
-                name="date"
-                defaultValue={event.date.split("T")[0]}
-                className={dateStyle}
-              />
-            </div>
-
-            <div className="flex flex-col ">
-              <label>Event Type</label>
+              <p>Event Category</p>
               <select
-                name="eventType"
-                defaultValue={event.eventType}
+                name="category"
+                value={category}
+                onChange={(e) => {
+                  const newCategory = e.target.value as EventCategory;
+                  setCategory(newCategory);
+
+                  // сбрасываем подкатегорию при смене категории
+                  setSubCategory(
+                    EVENT_CATEGORIES[newCategory].subcategories[0]
+                  );
+                }}
                 className={selectStyle}
               >
-                {EVENT_TYPES.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
+                <option defaultValue={event.category}>{event.category}</option>
+                {Object.entries(EVENT_CATEGORIES).map(([key, value]) => (
+                  <option key={key} value={key}>
+                    {value.label}
                   </option>
                 ))}
               </select>
             </div>
-          </section>
+            {EVENT_CATEGORIES[category] && (
+              <div className="flex flex-col">
+                <p>Event Subcategory</p>
 
+                <select
+                  name="subCategory"
+                  value={subCategory}
+                  onChange={(e) => setSubCategory(e.target.value)}
+                  className={selectStyle}
+                >
+                  <option value={event.subCategory} > {event.subCategory}</option>
+                  {EVENT_CATEGORIES[category].subcategories.map((sub) => (
+                    <option key={sub} value={sub}>
+                      {sub}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </section>
+<div>
+  <label>GPS:</label>
+  <div className="flex gap-4">
+    <input
+      type="number"
+      step="0.000001"
+      name="lat"
+      defaultValue={event.location.lat}
+      className={inputStyle}
+      placeholder="Latitude"
+    />  
+    <input
+      type="number"
+      step="0.000001"
+      name="lng"
+      defaultValue={event.location.lng}
+      className={inputStyle}
+      placeholder="Longitude"
+    />
+  </div>
+</div>
           <div>
             <label>Street</label>
             <input

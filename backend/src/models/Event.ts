@@ -1,13 +1,17 @@
 import { Schema, Types, model } from "mongoose";
-import { EVENT_TYPES, type EventType } from "@event-map/shared";
+import { EVENT_CATEGORIES, type  EventCategory } from "@event-map/shared";
 
 
+const EVENT_CATEGORY_KEYS = Object.keys(
+  EVENT_CATEGORIES
+) as EventCategory[];
 
 export interface IEventDocument {
   _id: Types.ObjectId;
         title: string;
         description: string;
-        eventType: EventType;
+       category: EventCategory;         
+       subCategory?: string; 
         date: Date;
         media:Types.ObjectId[];
         location: {
@@ -36,11 +40,25 @@ const eventSchema = new Schema<IEventDocument>({
   description: {
     type: String,
   },
-  eventType: {
-    type: String,
-    enum: EVENT_TYPES,
-    default: "other",
+  category: {
+      type: String,
+       enum: Object.keys(EVENT_CATEGORIES),
+      required: true,
+    },
+subCategory: {
+  type: String,
+  validate: {
+    validator(value: string) {
+      const allSubCategories = Object.values(EVENT_CATEGORIES)
+        .flatMap(c => c.subcategories) as readonly string[];
+
+      return allSubCategories.includes(value);
+    },
+    message: "Invalid subCategory",
   },
+},
+
+    
   date: {
     type: Date,
     default: Date.now,

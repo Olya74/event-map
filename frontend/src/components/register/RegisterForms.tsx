@@ -10,6 +10,7 @@ import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
 import ErrorMessage from "../errors/ErrorMessage";
 import Success from "../success/Success";
 import { getErrorMessage } from "../../helpers/functions/errorHelper";
+import useDebounce from "../../hooks/useDebounce";
 
 const RegisterForms = () => {
   const { thema } = useThema();
@@ -18,6 +19,8 @@ const RegisterForms = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [form, setForm] = useState({ name: "", email: "", password: "" });
+    const debouncedEmail = useDebounce({ value: form.email, delay: 500 });
+  const debouncedPassword = useDebounce({ value: form.password, delay: 500 });
   const [errMsg, setErrMsg] = useState("");
   const errRef = useRef<HTMLDivElement>(null);
   const [successMsg, setSuccessMsg] = useState("");

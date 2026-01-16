@@ -1,5 +1,5 @@
 import { type IMedia } from "./Media";
-import { type EventType, type EventStatus } from "@event-map/shared";
+import { type EventCategory, type EventStatus } from "@event-map/shared";
 
 export type EventResponse = IEvent[];
 export type EventQueryResponse = {
@@ -15,7 +15,8 @@ export interface IEvent {
   description: string;
   date: string; 
   media: IMedia[];
-  eventType: EventType;
+  category: EventCategory;
+  subCategory?: string;
   location: {
     lat: number;
     lng: number;
@@ -37,7 +38,8 @@ export interface CreateEventDTO {
   title: string;
   description: string;
   date: Date | string;
-  eventType: EventType;
+  category: EventCategory | string;
+  subCategory?: string;
   street?: string;
   number?: string;
   zip?: string;

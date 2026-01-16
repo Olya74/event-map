@@ -11,6 +11,7 @@ import { useThema } from "../../../../context/ThemaContext";
 import "./event.css";
 import { useFilePreview } from "../../../../hooks/useFilePreview";
 import { inputStyle, selectStyle, dateStyle } from "../../../../styles/style";
+import { EVENT_CATEGORIES, type EventCategory } from "@event-map/shared";
 
 export default function CreateEvent() {
   const [createEvent] = useCreateEventMutation();
@@ -24,12 +25,12 @@ export default function CreateEvent() {
 
   const successRef = useRef<HTMLDivElement>(null);
   const errRef = useRef<HTMLDivElement>(null);
-
   const [formEvent, setFormEvent] = useState<CreateEventDTO>({
     title: "",
     description: "",
     date: "",
-    eventType: "other",
+    category: "",
+    subCategory: "",
     street: "",
     number: "",
     zip: "",
@@ -46,7 +47,8 @@ export default function CreateEvent() {
         title: "",
         description: "",
         date: "",
-        eventType: "other",
+        category: "",
+        subCategory: "",
         street: "",
         number: "",
         zip: "",
@@ -80,14 +82,13 @@ export default function CreateEvent() {
 
     const hasCoords =
       lat !== null && lng !== null && lat !== undefined && lng !== undefined;
+
     const hasAddress = Boolean(formEvent.street && formEvent.zip);
 
-    if (!hasCoords) {
-      if (!hasAddress) {
-        setErrorMsg("Please provide an address or map coordinates.");
-        errRef.current?.focus();
-        return;
-      }
+    if (!hasAddress && !hasCoords) {
+      setErrorMsg("Please provide an address or map coordinates.");
+      errRef.current?.focus();
+      return;
     }
 
     if (hasCoords) {
@@ -96,17 +97,22 @@ export default function CreateEvent() {
     }
 
     files.forEach((file) => formData.append("files", file));
+    if (!formEvent.category) {
+      setErrorMsg("Please choose event category");
+      return;
+    }
 
     Object.entries(formEvent).forEach(([k, v]) => {
-      if (v !== undefined && v !== null) {
+      if (v !== undefined && v !== null && v !== "") {
         formData.append(k, String(v));
       }
     });
-
+console.log("Submitting formEvent:", formEvent);
     try {
       await createEvent(formData).unwrap();
 
       setSuccessMsg(`Event ${formEvent.title} created successfully!`);
+
       successRef.current?.focus();
       reset();
     } catch (err: any) {
@@ -131,6 +137,16 @@ export default function CreateEvent() {
           onSubmit={handleSubmit}
           className={`space-y-5  sm:text-xl font-semibold form-field`}
         >
+          <div className="space-y-1">
+            <label htmlFor="date">Date: </label>
+            <input
+              id="date"
+              name="date"
+              type="date"
+              onChange={handleChange}
+              className={`${dateStyle}`}
+            />
+          </div>
           {/* Title */}
           <div className="space-y-1 ">
             <label htmlFor="title" className="">
@@ -161,36 +177,47 @@ export default function CreateEvent() {
           </div>
 
           {/* Date & Type */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 justify-between items-center">
-            <div className="space-y-1">
-              <label htmlFor="date">Date: </label>
-              <input
-                id="date"
-                name="date"
-                type="date"
-                onChange={handleChange}
-                className={`${dateStyle}`}
-              />
-            </div>
-
+          <div className="grid grid-cols-1 sm:grid-flow-col sm:auto-cols-max gap-10 justify-between ">
             <div className={`space-y-1 `}>
-              <label htmlFor="eventType">Event Type: </label>
               <select
-                id="eventType"
-                name="eventType"
+                id="category"
+                name="category"
                 onChange={handleChange}
                 className={`${selectStyle}`}
               >
-                <option value="other">Other</option>
-                <option value="music">Music</option>
-                <option value="sports">Sports</option>
-                <option value="art">Art</option>
-                <option value="technology">Technology</option>
-                <option value="food">Food</option>
+                <option value={formEvent.category}>
+                  {formEvent.category
+                    ? `Selected category: ${formEvent.category}`
+                    : "Choose a category"}
+                </option>
+                {Object.keys(EVENT_CATEGORIES).map((category) => (
+                  <option key={category} value={category}>
+                    {EVENT_CATEGORIES[category as EventCategory].label}
+                  </option>
+                ))}
               </select>
             </div>
-          </div>
 
+            {formEvent.category && (
+              <div className={`space-y-1`}>
+                <h4>{formEvent.category}</h4>
+                <select
+                  id="subCategory"
+                  name="subCategory"
+                  onChange={handleChange}
+                  className={`${selectStyle}`}
+                >
+                  {EVENT_CATEGORIES[
+                    formEvent.category as EventCategory
+                  ].subcategories.map((subcat) => (
+                    <option key={subcat} value={subcat}>
+                      {subcat}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
           {/* Address */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 form-field">
             <div>

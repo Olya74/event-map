@@ -60,6 +60,9 @@ export default {
 
       desktop: "1280px",
       // => @media (min-width: 1280px) { ... }
+
+      tv: "1536px",
+      // => @media (min-width: 1536px) { ... }
     },
   },
    content: [

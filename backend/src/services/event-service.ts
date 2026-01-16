@@ -32,6 +32,7 @@ class EventService {
   }
 
   async createEvent(eventData: CreateEventDTO, files: Express.Multer.File[]) {
+    
     // 📍 location
     let location: { lat: number; lng: number };
     try {
@@ -81,7 +82,8 @@ class EventService {
             {
               title: eventData.title,
               description: eventData.description,
-              eventType: eventData.eventType,
+              category: eventData.category,
+              subCategory: eventData.subCategory,
               date: eventData.date,
               media: mediaIds,
               location: location,
@@ -242,6 +244,20 @@ class EventService {
     event.attendees = event.attendees.filter((id) => !id.equals(userId));
     await event.save();
     return { message: "Successfully left the event." };
+  }
+  async getUpcommingEvents(page: number, limit: number) {
+    const currentDate = new Date();
+     const skip = (page - 1) * limit;
+    const events = await Event.find({ date: { $gte: currentDate } })
+      .sort({ date: 1 })
+      .skip(skip)
+      .limit(limit)
+      .populate("media");
+
+      if (events.length === 0) {
+        return [];
+      }
+    return events;
   }
 }
 export default new EventService();

@@ -55,16 +55,16 @@ function Header() {
           {/* LEFT */}
           <ul className="flex items-center min-[105px]:gap-4 ">
             {/* Desktop */}
-            <li className="max-md:hidden md:block">
-              <NavLink to="/">Home</NavLink>
+            <li className="max-md:hidden md:block border-r pr-4 border-gray-400 hover:text-blue-500 hover:text-3xl transition-colors ">
+              <NavLink to="/">Start Page</NavLink>
             </li>
 
-            <li className="max-md:hidden md:block">
-              <NavLink to="/events">Events</NavLink>
+            <li className="max-md:hidden md:block border-r pr-4 border-gray-400 hover:text-blue-500 hover:text-3xl transition-colors">
+              <NavLink to="/events">Browse Events</NavLink>
             </li>
 
-            <li className="max-md:hidden md:block">
-              <NavLink to="/map">Map</NavLink>
+            <li className="max-md:hidden md:block border-r pr-4 border-gray-400 hover:text-blue-500 hover:text-3xl transition-colors">
+              <NavLink to="/map">View Map</NavLink>
             </li>
 
             {/* Mobile menu */}
