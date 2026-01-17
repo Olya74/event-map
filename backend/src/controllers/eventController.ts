@@ -2,12 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import ErrorHandler from "../exeptions/errorHandlung.js";
 import eventService from "../services/event-service.js";
 import { Types } from "mongoose";
-import GetAllEventsQuery from "src/services/types/GetAllEventsQuery.js";
+import GetAllEventsQuery from "../services/types/GetAllEventsQuery.js";
 
 
 
 
 const getAllEvents = async (req: Request, res: Response, next: NextFunction) => {
+  console.log("getAllEvents controller called with params:", req.params);
   try {
     const { page = 1, limit = 1, sortBy = "createdAt", sortDirection = "desc" } = req.query;
     const queryParams:GetAllEventsQuery = {page: Number(page), limit: Number(limit), sortBy: String(sortBy), sortDirection: String(sortDirection) as "asc" | "desc"};
@@ -18,10 +19,21 @@ const getAllEvents = async (req: Request, res: Response, next: NextFunction) => 
     next(error);
   }
 };
+ 
+const getEventsByCategory = async (req: Request, res: Response, next: NextFunction) => {
+  const { category, subCategory } = req.params;
+  try {
+    const { page = 1, limit = 1, sortBy = "createdAt", sortDirection = "desc" } = req.query;
+    const queryParams:GetAllEventsQuery = {page: Number(page), limit: Number(limit), sortBy: String(sortBy), sortDirection: String(sortDirection) as "asc" | "desc"};
+    const events = await eventService.getEventsByCategory(category, subCategory, queryParams);
+    res.status(200).json(events);
+  } catch (error) {
+    next(error);
+  }
+};
 
 const createEvent = async (req: Request, res: Response, next: NextFunction) => {
   const body = req.body;
-console.log("createEvent controller called with body:", body);
   try {
     if (!body.title || !body.date || !body.userId) {
       return next(ErrorHandler.ValidationError("Missing required fields"));
@@ -62,6 +74,7 @@ const updateEventById = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
+  console.log("updateEventById controller called with ID:", req.params.id);
   try {
     if (!req.params.id) {
       return next(ErrorHandler.ValidationError("Event ID is required"));
@@ -161,6 +174,7 @@ const getUpcommingEvents = async (req: Request, res: Response, next: NextFunctio
 export {
   createEvent,
   getAllEvents,
+  getEventsByCategory,
   deleteEventById,
   getEventById,
   updateEventById,

@@ -9,6 +9,18 @@ export const eventAPI = apiSlice.injectEndpoints({
         `/events?page=${page}&limit=${limit}&sortBy=${sortBy}&sortDirection=${sortDirection}`,
       providesTags: () => [{ type: "Event" }],
     }),
+    getEventsByCategory: build.query<
+      EventResponse,
+      {
+        category: string;
+        subCategory: string;
+        queryParams: EventQueryResponse;
+      }
+    >({
+      query: ({ category, subCategory, queryParams }) =>
+        `/events/${category}/${subCategory}?page=${queryParams.page}&limit=${queryParams.limit}&sortBy=${queryParams.sortBy}&sortDirection=${queryParams.sortDirection}`,
+      providesTags: () => [{ type: "Event" }],
+    }),
     getUpcommingEvents: build.query<
       EventResponse,
       { page: number; limit: number }
@@ -31,8 +43,8 @@ export const eventAPI = apiSlice.injectEndpoints({
         result
           ? [{ type: "Event", id }]
           : error?.status === 401
-          ? ["UNAUTHORIZED"]
-          : ["UNKNOWN_ERROR"],
+            ? ["UNAUTHORIZED"]
+            : ["UNKNOWN_ERROR"],
     }),
     updateEvent: build.mutation<void, { id: string; updatedEvent: FormData }>({
       query: ({ id, updatedEvent }) => ({
@@ -72,7 +84,7 @@ export const eventAPI = apiSlice.injectEndpoints({
             if (!draft.attendees.includes(userId)) {
               draft.attendees.push(userId);
             }
-          })
+          }),
         );
 
         try {
@@ -96,7 +108,7 @@ export const eventAPI = apiSlice.injectEndpoints({
         const patch = dispatch(
           eventAPI.util.updateQueryData("getEventById", eventId, (draft) => {
             draft.attendees = draft.attendees.filter((id) => id !== userId);
-          })
+          }),
         );
 
         try {
@@ -111,6 +123,7 @@ export const eventAPI = apiSlice.injectEndpoints({
 
 export const {
   useGetAllEventsQuery,
+  useGetEventsByCategoryQuery,
   useCreateEventMutation,
   useUpdateEventMutation,
   useDeleteEventMutation,

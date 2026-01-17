@@ -1,6 +1,6 @@
 import express from "express";
 import { createEvent,getAllEvents,deleteEventById,getEventById,updateEventById, getMyEvents, getJoinedEvents,joinEvent,leaveEvent,
-    getUpcommingEvents
+    getUpcommingEvents,getEventsByCategory
 } from "../controllers/eventController.js";
 import { uploadEventMedia } from "../middlewares/uploadEventMedia.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js"
@@ -9,6 +9,7 @@ import { authMiddleware } from "../middlewares/auth.middleware.js"
 const  eventRouter = express.Router();
 
 eventRouter.route('/').get(getAllEvents);
+eventRouter.route('/:category/:subCategory').get(getEventsByCategory);
 eventRouter.route('/create-event').post(authMiddleware, uploadEventMedia, createEvent);
 eventRouter.route('/my-events').get( authMiddleware, getMyEvents);
 eventRouter.route('/joined').get( authMiddleware, getJoinedEvents);

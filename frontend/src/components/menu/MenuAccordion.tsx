@@ -97,7 +97,7 @@ MenuAccordion.Item = function MenuAccordionItem({
       className={
         match
           ? "p-2 mb-2 block bg-gray-300 rounded"
-          : "p-2 mb-2 block hover:bg-gray-200 rounded"
+          : "p-2 mb-2 block hover:text-gray-800 sm:hover:bg-gray-600 rounded transition transform hover:scale-125 sm:hover:font-semibold"
       }
     >
       {title}

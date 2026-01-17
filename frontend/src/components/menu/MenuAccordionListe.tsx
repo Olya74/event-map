@@ -1,3 +1,4 @@
+import slugify from "../../helpers/functions/slugify";
 import MenuAccordion from "./MenuAccordion";
 import { EVENT_CATEGORIES, type EventCategory } from "@event-map/shared";
 
@@ -27,12 +28,12 @@ function MenuAccordionListe() {
             title={categoryKey} 
             label={categoryValue.label} 
           >
-            <div className="flex sm:flex-col gap-0 overflow-x-auto ">
+            <div className="flex sm:flex-col gap-0 overflow-x-auto sm:overflow-x-hidden ">
             {categoryValue.subcategories.map((sub) => (
               <MenuAccordion.Item
                 key={sub}
                 title={sub}
-                to={`/events/${categoryKey}/${sub.toLowerCase().replace(/\s+/g, "-")}`}
+                to={`/events/${categoryKey}/${slugify(sub)}`}
               />
             ))}
             </div>

@@ -31,9 +31,9 @@ export const EVENT_CATEGORIES = {
   wedding:{label:"Wedding", subcategories: ["Ceremony", "Party","Other"]},
   culture:{label:"Culture", subcategories: ["Theater", "Movie", "Opera","Other"]},
   technology:{label:"Technology", subcategories: ["Meetup", "Conference", "Workshop","Other"]},
-  food:{label:"Food", subcategories: ["Tasting", "Street food", "Cooking class","Other"]},
-  travel:{label:"Travel", subcategories: ["City tour", "Hiking", "Excursion","Other"]},
-  children_events:{label:"Children_events", subcategories: ["Birthday", "School event", "Workshop","Other"]},
+  food:{label:"Food", subcategories: ["Tasting", "Street food", "Cooking Class","Other"]},
+  travel:{label:"Travel", subcategories: ["City Tour", "Hiking", "Excursion","Other"]},
+  children_events:{label:"Children_events", subcategories: ["Birthday", "School Event", "Workshop","Other"]},
   other:{label:"Other", subcategories: ["Other"]},
 } as const;
 

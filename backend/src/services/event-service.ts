@@ -10,6 +10,7 @@ import { CreateEventDTO } from "../dtos/events-dto.js";
 import { prepareMediaForDeletion } from "../services/media/prepareMediaForDeletion.js";
 import { IEventDocument } from "../models/Event.js";
 import GetAllEventsQuery from "./types/GetAllEventsQuery.js";
+import capitalizeFirstLetter from "../utils/capitalizeFirstLetter.js";
 
 class EventService {
   // Get all events with populated media
@@ -30,6 +31,31 @@ class EventService {
     }
     return events;
   }
+
+  // Get events by category and sub-category
+  async getEventsByCategory(
+    category: string,
+    subCategory: string,
+    { page, limit, sortBy, sortDirection }: GetAllEventsQuery
+  ) {
+  
+      subCategory = subCategory.split("-").map(capitalizeFirstLetter).join(" ");
+    
+    const skip = (page - 1) * limit;
+    const events = await Event.find({
+      category: category,
+      subCategory: subCategory,
+    })
+      .sort({ [sortBy]: sortDirection === "asc" ? 1 : -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate("media");
+    if (!events) {
+      throw ErrorHandler.NotFoundError("No events found for the specified category and sub-category");
+    }
+    return events;
+  }
+
 
   async createEvent(eventData: CreateEventDTO, files: Express.Multer.File[]) {
     
@@ -153,6 +179,7 @@ class EventService {
     existingMediaIds: Types.ObjectId[],
     files: Express.Multer.File[]
   ) {
+    console.log("Updating event with ID in backend/src/services/event-service.ts:", eventId);
     const session = await mongoose.startSession();
     session.startTransaction();
     let uploadedCloudinary: CloudinaryDeleteDTO[] = [];

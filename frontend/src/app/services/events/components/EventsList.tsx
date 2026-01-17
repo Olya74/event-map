@@ -9,11 +9,11 @@ function EventList({
   emptyText?: string;
 }) {
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] gap-6 ">
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] gap-6  p-4">
       {events && events.length > 0 ? (
         events.map((event) => <EventItem key={event._id} event={event} />)
       ) : (
-        <p className="text-center text-gray-500">
+        <p className="text-center text-red-500 text-4xl font-semibold">
           {emptyText || "No events available"}
         </p>
       )}

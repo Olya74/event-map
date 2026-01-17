@@ -1,20 +1,39 @@
 import { useState } from "react";
 import type { JSX } from "react";
-import { useGetAllEventsQuery } from "../EventService";
+import { useGetAllEventsQuery, useGetEventsByCategoryQuery } from "../EventService";
 import Loader from "../../../../components/loading/Loader";
 import EventsList from "./EventsList";
+import { useParams } from "react-router-dom";
 
 function EventsContainer(): JSX.Element {
   const [limit, setLimit] = useState(6);
   const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState("createdAt");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  const queryParams = {
+  limit,
+  page,
+  sortBy,
+  sortDirection,
+};
+const { category, subCategory } = useParams<{
+  category?: string;
+  subCategory?: string;
+}>();
 
+const queryResult =
+  category && subCategory
+    ? useGetEventsByCategoryQuery({
+        category,
+        subCategory,
+        queryParams,
+      })
+    : useGetAllEventsQuery(queryParams);
   const {
     data: events,
     isLoading,
     isError,
-  } = useGetAllEventsQuery({ limit, page, sortBy, sortDirection });
+  } = queryResult;
 
   return (
     <section className="max-w-[160rem] mx-auto px-4 py-6 ">
@@ -81,11 +100,7 @@ function EventsContainer(): JSX.Element {
       {isError && (
         <p className="text-center text-red-600">Failed to load events</p>
       )}
-
-      {events?.length === 0 && (
-        <p className="text-center text-gray-500">No events found</p>
-      )}
-
+      
       <EventsList events={events} emptyText="No events found" />
 
       {/* Pagination */}

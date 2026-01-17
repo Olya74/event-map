@@ -18,6 +18,7 @@ import WelcomePage from "./pages/WelcomePage.tsx";
 
 
 
+
 const App = () => {
 const dispatch = useAppDispatch();
 const { refetch: refresh } = useRefreshQuery();
@@ -47,7 +48,9 @@ const { refetch: refresh } = useRefreshQuery();
     <Route path="/activate-success" element={<ActivateSuccess />} />
     <Route path="/login" element={<LoginPage />} />
      <Route path="/map" element={<MapPage />} /> 
-    <Route path="/events" element={<EventsContainer />} />
+     <Route path="/events" element={<EventsContainer />} />
+     <Route path="/events/:category/:subCategory" element={<EventsContainer />} />
+    
     
           <Route path="/events/:id/media" element={<h4>Media</h4>} />
           <Route path="/events/:id/media/:mediaId" element={<h4>Media Detail</h4>} />
