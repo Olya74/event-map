@@ -8,7 +8,6 @@ import GetAllEventsQuery from "../services/types/GetAllEventsQuery.js";
 
 
 const getAllEvents = async (req: Request, res: Response, next: NextFunction) => {
-  console.log("getAllEvents controller called with params:", req.params);
   try {
     const { page = 1, limit = 1, sortBy = "createdAt", sortDirection = "desc" } = req.query;
     const queryParams:GetAllEventsQuery = {page: Number(page), limit: Number(limit), sortBy: String(sortBy), sortDirection: String(sortDirection) as "asc" | "desc"};
