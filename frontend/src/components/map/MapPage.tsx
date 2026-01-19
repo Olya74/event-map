@@ -19,10 +19,10 @@ function MapPage() {
   };
 
   return (
-    <div className="relative h-[calc(100vh-150px)] w-full">
+    <div className="relative h-[calc(100vh-150px)] w-full p-6">
       <button
         onClick={() => setShow(!show)}
-        className="absolute z-[1001] top-[-15px] left-1/2 -translate-x-1/2 bg-gray-500 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-md shadow transition text-lg"
+        className="absolute z-[1] top-[-15px] left-1/2 -translate-x-1/2 bg-gray-500 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-md shadow transition text-lg"
       >
         {show ? "Hide Info" : "Show Info"}
       </button>

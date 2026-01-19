@@ -52,7 +52,7 @@ export default function Profile() {
 
   return (
     <div className="max-w-[160rem] mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-4 gap-10 justify-center items-start">
-      <div className="lg:col-span-1 space-y-10 mr-20 border-r pr-20  border-gray-400">
+      <div className="lg:col-span-1 space-y-10 mr-20 sm:border-r sm:pr-20  border-gray-400 mx-auto">
   {/* PROFILE CARD */}
   <section className="bg-white rounded-2xl shadow-md p-6 flex flex-col items-center gap-6">
     {user?.avatar?.url ? (

@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink,useNavigate  } from "react-router-dom";
 import logo from "/bg1.png";
 import { useAppSelector } from "../../app/hooks/hooks";
 import { selectedCurrentUser } from "../../app/features/auth/authSlice";
@@ -14,13 +14,18 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./header.css";
 import { useLogoutMutation } from "../../app/features/auth/authApiSlice";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function Header() {
   const { thema } = useThema();
   const navigate = useNavigate();
   const user = useAppSelector(selectedCurrentUser);
   const [logout] = useLogoutMutation();
+  const [showMenu, setShowMenu] = useState(false);
+
+  const toggleMenu = () => {
+    setShowMenu((prev) => !prev);
+  }
   const handleLogout = async () => {
     try {
       await logout().unwrap();
@@ -53,7 +58,7 @@ function Header() {
         {/* NAV */}
         <nav className="flex items-center  min-[165px]:w-full min-[165px]:justify-between min-[105px]:gap-2 lg:text-xl  md:mx-6">
           {/* LEFT */}
-          <ul className="flex items-center min-[105px]:gap-4 ">
+          <ul className="flex items-center min-[105px]:gap-4">
             {/* Desktop */}
             <li className="max-md:hidden md:block border-r pr-4 border-gray-400 hover:text-blue-500 hover:text-3xl transition-colors ">
               <NavLink to="/">Start Page</NavLink>
@@ -68,11 +73,21 @@ function Header() {
             </li>
 
             {/* Mobile menu */}
-            <li className="min-md:hidden">
+            <li className="min-md:hidden" onClick={toggleMenu}>
               <FontAwesomeIcon icon={faList} className={`text-xl  ${thema}`} />
+              {showMenu && (
+                <ul className={`z-[1005] absolute top-20 left-4 ${ thema === "light" ? "bg-gray-200 " : "bg-gray-700"} shadow-lg rounded-md py-2 w-40 z-50`}>
+                  <li className={`px-4 py-2  ${ thema === "light" ? "hover:bg-gray-400 hover:text-amber-50 " : "hover:bg-gray-400"}  hover:border-l-blue-500 hover:border-l-4`}>
+                    <NavLink to="/events" onClick={toggleMenu}>Browse Events</NavLink>
+                  </li>
+                  <li className={`px-4 py-2  ${ thema === "light" ? "hover:bg-gray-400 hover:text-amber-50 " : "hover:bg-gray-400"}  hover:border-l-blue-500 hover:border-l-4`}>
+                    <NavLink to="/map" onClick={toggleMenu}>View Map</NavLink>
+                  </li>
+                </ul>
+              )}  
             </li>
             <li className="min-md:hidden">
-              <FontAwesomeIcon icon={faHome} className={`text-xl ${thema}`} />
+              <NavLink to="/"><FontAwesomeIcon icon={faHome} className={`text-xl ${thema}`} /></NavLink>
             </li>
           </ul>
 
