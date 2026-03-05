@@ -1,9 +1,8 @@
 import nodemailer from "nodemailer";
-import dotenv from "dotenv/config.js";
 import ErrorHandler from "../exeptions/errorHandlung.js";
 
 class MailService {
-  transporter;
+  private transporter;
   constructor() {
     this.transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
@@ -31,7 +30,6 @@ class MailService {
 
     try {
       const info = await this.transporter.sendMail(mailOptions);
-      console.log("Activation email sent:", info.response);
       return { message: "Activation email sent successfully!" };
     } catch (error) {
       console.error("Error sending activation email:", error);
@@ -53,12 +51,34 @@ class MailService {
 
     try {
       const info = await this.transporter.sendMail(mailOptions);
-      console.log("Email sent:", info.response);
       return { message: `Email sent to ${to} successfully!` };
     } catch (error) {
       console.error("Error sending email:", error);
       throw ErrorHandler.SendEmailError();
     }
   }
+    async sendEventSubscriptionEmail(to: string, eventTitle: string,link: string){
+       await this.transporter.sendMail({
+      from: `"Event App" <${process.env.EMAIL_USER}>`,
+      to:process.env.EMAIL_USER ,// to, 
+      subject: "You subscribed to an event 🎉",
+      html: `
+        <h2 style="color: green;">Subscription Confirmed</h2>
+        <p>You have successfully subscribed to the event <b>${eventTitle}</b>.</p>
+        <p>When you don't want to attend anymore, you can unsubscribe here: <a href="${link}">${link}</a></p>
+      `,
+    });
+    }
+    async sendEventUnsubscriptionEmail(to: string, eventTitle: string){
+       await this.transporter.sendMail({
+      from: `"Event App" <${process.env.EMAIL_USER}>`,
+      to:process.env.EMAIL_USER ,// to, 
+      subject: "Вы отписались от события ❌",
+      html: `
+        <h2 style="color: red;">Отписка выполнена</h2>
+        <p>Вы успешно отписались от события <b>${eventTitle}</b>.</p>
+      `,
+    });
+    }
 }
 export default new MailService();

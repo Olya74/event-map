@@ -1,5 +1,6 @@
 import { apiSlice } from "../../api/apiSlice";
 import { logOut, setCredentials } from "./authSlice";
+import { eventAPI } from "../../services/events/EventService";
 import type {
   ILoginRequest,
   IRegisterRequest,
@@ -15,7 +16,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
         body: { ...credentials },
         invalidatesTags: (result: any) => (result ? ["UNAUTHORIZED"] : []),
       }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           dispatch(
@@ -32,8 +33,14 @@ export const authApiSlice = apiSlice.injectEndpoints({
         url: "/logout",
         method: "POST",
       }),
-      async onQueryStarted(arg, { dispatch }) {
-        dispatch(logOut());
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+         try {
+    await queryFulfilled;
+  } finally {
+    dispatch(logOut());
+    dispatch(eventAPI.util.resetApiState());
+    dispatch(authApiSlice.util.resetApiState());
+  }
       },
     }),
     register: build.mutation<IAuthResponse, IRegisterRequest>({

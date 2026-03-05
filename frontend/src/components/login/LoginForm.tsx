@@ -19,7 +19,7 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
-  const debouncedForm=useDebounce({value:form, delay:1000});
+  const debouncedForm=useDebounce({value:form, delay:3000});
   const [errMsg, setErrMsg] = useState<{
     email?: string;
     password?: string;

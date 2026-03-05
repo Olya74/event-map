@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect} from "react";
 import { useAppSelector } from "../../../hooks/hooks";
 import { selectedCurrentUser } from "../../../features/auth/authSlice";
 import { useCreateEventMutation } from "../EventService";
@@ -41,7 +41,7 @@ export default function CreateEvent() {
     useFilePreview();
 
   useEffect(() => {
-    if (successMsg || errorMsg) {
+    if (successMsg ) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       setFormEvent({
         title: "",
@@ -60,10 +60,16 @@ export default function CreateEvent() {
         navigate("/events");
       }
       setSuccessMsg("");
-      setErrorMsg("");
+      
     }, 4000);
     return () => clearTimeout(timer);
-  }, [successMsg, errorMsg]);
+  }, [successMsg]);
+
+  useEffect(() => {
+    if (errorMsg) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [errorMsg]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -71,6 +77,14 @@ export default function CreateEvent() {
     >
   ) => {
     const { name, value } = e.target;
+      if (name === "category") {
+    setFormEvent((prev) => ({
+      ...prev,
+      category: value,
+      subCategory: "", // сбрасываем
+    }));
+    return;
+  }
     setFormEvent((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -102,12 +116,16 @@ export default function CreateEvent() {
       return;
     }
 
+    if (!formEvent.subCategory) {
+  setErrorMsg("Please choose subcategory");
+  return;
+}
     Object.entries(formEvent).forEach(([k, v]) => {
       if (v !== undefined && v !== null && v !== "") {
         formData.append(k, String(v));
       }
     });
-console.log("Submitting formEvent:", formEvent);
+
     try {
       await createEvent(formData).unwrap();
 
@@ -204,9 +222,11 @@ console.log("Submitting formEvent:", formEvent);
                 <select
                   id="subCategory"
                   name="subCategory"
+                   value={formEvent.subCategory}
                   onChange={handleChange}
                   className={`${selectStyle}`}
                 >
+                    <option value="">Choose subcategory</option>
                   {EVENT_CATEGORIES[
                     formEvent.category as EventCategory
                   ].subcategories.map((subcat) => (

@@ -3,29 +3,133 @@ import ErrorHandler from "../exeptions/errorHandlung.js";
 import eventService from "../services/event-service.js";
 import { Types } from "mongoose";
 import GetAllEventsQuery from "../services/types/GetAllEventsQuery.js";
+import TokenService from "../services/token-service.js";
 
-
-
-
-const getAllEvents = async (req: Request, res: Response, next: NextFunction) => {
+const getAllEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const userId = req.user?.id;
   try {
-    const { page = 1, limit = 1, sortBy = "createdAt", sortDirection = "desc" } = req.query;
-    const queryParams:GetAllEventsQuery = {page: Number(page), limit: Number(limit), sortBy: String(sortBy), sortDirection: String(sortDirection) as "asc" | "desc"};
-    const events = await eventService.getAllEvents(queryParams);
+    const {
+      page = 1,
+      limit = 1,
+      sortBy = "createdAt",
+      sortDirection = "desc",
+      fromDate,
+    } = req.query;
+    const queryParams: GetAllEventsQuery = {
+      page: Number(page),
+      limit: Number(limit),
+      sortBy: String(sortBy),
+      sortDirection: String(sortDirection) as "asc" | "desc",
+      fromDate: fromDate ? String(fromDate) : undefined,
+    };
+    const events = await eventService.getAllEvents(queryParams, userId);
+
+    res.status(200).json(events);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getEventsByCategory = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { category, subCategory } = req.params;
+  try {
+    const {
+      page = 1,
+      limit = 1,
+      sortBy = "createdAt",
+      sortDirection = "desc",
+    } = req.query;
+    const queryParams: GetAllEventsQuery = {
+      page: Number(page),
+      limit: Number(limit),
+      sortBy: String(sortBy),
+      sortDirection: String(sortDirection) as "asc" | "desc",
+    };
+    const events = await eventService.getEventsByCategory(
+      category,
+      subCategory,
+      queryParams,
+    );
    
     res.status(200).json(events);
   } catch (error) {
     next(error);
   }
 };
- 
-const getEventsByCategory = async (req: Request, res: Response, next: NextFunction) => {
-  const { category, subCategory } = req.params;
+
+// Subscribe to event
+const subscribeToEvent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (!req.user?.id) {
+    return next(ErrorHandler.ValidationError("Unauthorized"));
+  }
   try {
-    const { page = 1, limit = 1, sortBy = "createdAt", sortDirection = "desc" } = req.query;
-    const queryParams:GetAllEventsQuery = {page: Number(page), limit: Number(limit), sortBy: String(sortBy), sortDirection: String(sortDirection) as "asc" | "desc"};
-    const events = await eventService.getEventsByCategory(category, subCategory, queryParams);
-    res.status(200).json(events);
+    const userId = req.user?.id;
+    const eventId = req.params.id;
+    if (!userId) {
+      throw ErrorHandler.ValidationError("Unauthorized");
+    }
+    const { message } = await eventService.subscribeToEvent(eventId, userId);
+    res.status(200).json({ message: message });
+  } catch (error) {
+    console.error("Subscribe error:", error);
+
+    next(error);
+  }
+};
+
+const unsubscribeFromEventByLink = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const token = req.query.token as string;
+    if (!token) throw ErrorHandler.ValidationError("Token missing");
+    const { userId, eventId } = await new TokenService().verifyUnsubscribeToken(
+      token,
+    );
+    const result = await eventService.unsubscribeFromEvent(eventId, userId);
+    res.json({
+      message: result.message,
+      eventTitle: result.eventTitle,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const confirmUnsubscribeFromEvent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { refreshToken } = req.cookies;
+    if (!refreshToken) throw ErrorHandler.ValidationError("Token missing");
+
+    const tokenService = new TokenService();
+    const userData = tokenService.validateRefreshToken(refreshToken);
+    if (!userData || typeof userData === "string") {
+      throw new Error("Invalid token payload");
+    }
+
+    const result = await eventService.unsubscribeFromEvent(
+      req.params.id,
+      userData.id,
+    );
+    res.status(200).json({ message: result.message, title: result.eventTitle });
   } catch (error) {
     next(error);
   }
@@ -48,7 +152,6 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
       .status(201)
       .json({ message: "Event created successfully", event: newEvent });
   } catch (error) {
-  
     next(error);
   }
 };
@@ -56,7 +159,7 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
 const getEventById = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const event = await eventService.getEventById(req.params.id);
@@ -71,15 +174,14 @@ const getEventById = async (
 const updateEventById = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
-  console.log("updateEventById controller called with ID:", req.params.id);
   try {
     if (!req.params.id) {
       return next(ErrorHandler.ValidationError("Event ID is required"));
     }
     const existingMediaIds: Types.ObjectId[] = JSON.parse(
-      req.body.existingMedia || "[]"
+      req.body.existingMedia || "[]",
     ).map((id: string) => new Types.ObjectId(id));
 
     const files = (req.files as Express.Multer.File[]) || [];
@@ -88,7 +190,7 @@ const updateEventById = async (
       req.params.id,
       req.body,
       existingMediaIds,
-      files
+      files,
     );
     res.json(event);
   } catch (error) {
@@ -99,7 +201,7 @@ const updateEventById = async (
 const deleteEventById = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     await eventService.deleteEventById(req.params.id);
@@ -111,7 +213,7 @@ const deleteEventById = async (
 const getMyEvents = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user?.id;
-     if (!userId) {
+    if (!userId) {
       throw ErrorHandler.ValidationError("Unauthorized");
     }
     const myEvents = await eventService.getMyEvents(userId);
@@ -120,10 +222,14 @@ const getMyEvents = async (req: Request, res: Response, next: NextFunction) => {
     next(error);
   }
 };
-const getJoinedEvents = async (req: Request, res: Response, next: NextFunction) => {
+const getJoinedEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const userId = req.user?.id;
-     if (!userId) {
+    if (!userId) {
       throw ErrorHandler.ValidationError("Unauthorized");
     }
     const joinedEvents = await eventService.getJoinedEvents(userId);
@@ -159,12 +265,19 @@ const leaveEvent = async (req: Request, res: Response, next: NextFunction) => {
     next(error);
   }
 };
-const getUpcommingEvents = async (req: Request, res: Response, next: NextFunction) => {
+const getUpcommingEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const { page = 1, limit = 10 } = req.query;
   const pageNumber = Number(page);
   const limitNumber = Number(limit);
   try {
-    const events = await eventService.getUpcommingEvents(pageNumber, limitNumber);
+    const events = await eventService.getUpcommingEvents(
+      pageNumber,
+      limitNumber,
+    );
     res.status(200).json(events);
   } catch (error) {
     next(error);
@@ -181,5 +294,8 @@ export {
   getJoinedEvents,
   joinEvent,
   leaveEvent,
-  getUpcommingEvents
+  getUpcommingEvents,
+  subscribeToEvent,
+  unsubscribeFromEventByLink,
+  confirmUnsubscribeFromEvent,
 };

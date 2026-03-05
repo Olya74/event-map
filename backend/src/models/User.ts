@@ -12,6 +12,11 @@ export interface IUser {
   isActivated?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+  notification_settings: {
+    email_notifications: boolean;
+    push_notifications: boolean;
+    sms_notifications: boolean; 
+  };
 }
 
 const UserSchema = new Schema<IUser>(
@@ -47,6 +52,11 @@ const UserSchema = new Schema<IUser>(
     ],
     activationLink: { type: String, default: null },
     isActivated: { type: Boolean, default: false },
+    notification_settings: {
+      email_notifications: { type: Boolean, default: false },
+      push_notifications: { type: Boolean, default: false },
+      sms_notifications: { type: Boolean, default: false },
+    },
   },
   {
     timestamps: true,

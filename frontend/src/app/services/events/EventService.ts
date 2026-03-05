@@ -5,10 +5,14 @@ import type { EventQueryResponse, EventResponse } from "../../models/IEvent";
 export const eventAPI = apiSlice.injectEndpoints({
   endpoints: (build) => ({
     getAllEvents: build.query<EventResponse, EventQueryResponse>({
-      query: ({ page, limit, sortBy, sortDirection }) =>
-        `/events?page=${page}&limit=${limit}&sortBy=${sortBy}&sortDirection=${sortDirection}`,
-      providesTags: () => [{ type: "Event" }],
+      query: ({ page, limit, sortBy, sortDirection, fromDate }) => {
+        let url = `/events?page=${page}&limit=${limit}&sortBy=${sortBy}&sortDirection=${sortDirection}`;
+        if (fromDate) url += `&fromDate=${encodeURIComponent(fromDate)}`;
+        return url;
+      },
+      providesTags: () => [{ type: "AllEvents" }],
     }),
+
     getEventsByCategory: build.query<
       EventResponse,
       {
@@ -19,15 +23,7 @@ export const eventAPI = apiSlice.injectEndpoints({
     >({
       query: ({ category, subCategory, queryParams }) =>
         `/events/${category}/${subCategory}?page=${queryParams.page}&limit=${queryParams.limit}&sortBy=${queryParams.sortBy}&sortDirection=${queryParams.sortDirection}`,
-      providesTags: () => [{ type: "Event" }],
-    }),
-    getUpcommingEvents: build.query<
-      EventResponse,
-      { page: number; limit: number }
-    >({
-      query: ({ page, limit }) =>
-        `/events/upcomming?page=${page}&limit=${limit}`,
-      providesTags: () => [{ type: "Event" }],
+      providesTags: () => [{ type: "EventByCategory" }],
     }),
     createEvent: build.mutation<any, FormData>({
       query: (formData) => ({
@@ -35,7 +31,7 @@ export const eventAPI = apiSlice.injectEndpoints({
         method: "POST",
         body: formData,
       }),
-      invalidatesTags: [{ type: "Event", id: "LIST" }],
+      invalidatesTags: [{ type: "AllEvents", id: "LIST" }],
     }),
     getEventById: build.query<IEvent, string>({
       query: (id) => `/events/${id}`,
@@ -54,20 +50,68 @@ export const eventAPI = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, error, { id }) => [{ type: "Event", id }],
     }),
+    subscribeToEvent: build.mutation<{ message: string }, string>({
+      query: (id) => ({
+        url: `/events/${id}/subscribe`,
+        method: "POST",
+      }),
+      // invalidatesTags: (result, error, id) => [{ type: "SubscribedEvent", id }],
+      invalidatesTags: (result, error, id) => [
+        { type: "Event", id },
+        { type: "MyEvents" },
+        { type: "JoinedEvents" },
+        { type: "AllEvents" },
+      ],
+    }),
+    unsubscribeFromEvent: build.mutation<
+      { message: string; title: string },
+      string
+    >({
+      query: (id) => ({
+        url: `/events/${id}/unsubscribe`,
+        method: "POST",
+      }),
+      invalidatesTags: (result, error, id) => [
+        { type: "Event", id },
+        { type: "MyEvents" },
+        { type: "JoinedEvents" },
+        { type: "AllEvents" },
+      ],
+    }),
+    confirmUnsubscribeFromEvent: build.mutation<
+      { message: string; title: string },
+      string
+    >({
+      query: (token) => ({
+        url: `/events/unsubscribe-confirm?token=${token}`,
+        method: "POST",
+      }),
+      invalidatesTags: (result, error, id) => [
+        { type: "Event", id },
+        { type: "MyEvents" },
+        { type: "JoinedEvents" },
+        { type: "AllEvents" },
+      ],
+    }),
     deleteEvent: build.mutation<{ message: string }, string>({
       query: (id) => ({
         url: `/events/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Event", id }],
+      invalidatesTags: (result, error, id) => [
+        { type: "Event", id },
+        { type: "MyEvents" },
+        { type: "JoinedEvents" },
+        { type: "AllEvents", id },
+      ],
     }),
     getMyEvents: build.query<EventResponse, void>({
       query: () => `/events/my-events`,
-      providesTags: () => [{ type: "Event" }],
+      providesTags: () => [{ type: "MyEvents" }],
     }),
     getJoinedEvents: build.query<IEvent[], void>({
       query: () => "/events/joined",
-      providesTags: () => [{ type: "Event" }],
+      providesTags: () => [{ type: "JoinedEvents" }],
     }),
     joinEvent: build.mutation<
       { message: string; event: IEvent },
@@ -77,7 +121,7 @@ export const eventAPI = apiSlice.injectEndpoints({
         url: `/events/${eventId}/join`,
         method: "POST",
       }),
-      invalidatesTags: () => [{ type: "Event" }],
+      invalidatesTags: () => [{ type: "Event" }, { type: "JoinedEvents" }],
       async onQueryStarted({ eventId, userId }, { dispatch, queryFulfilled }) {
         const patch = dispatch(
           eventAPI.util.updateQueryData("getEventById", eventId, (draft) => {
@@ -103,7 +147,7 @@ export const eventAPI = apiSlice.injectEndpoints({
         url: `/events/${eventId}/join`,
         method: "DELETE",
       }),
-      invalidatesTags: () => [{ type: "Event" }],
+      invalidatesTags: () => [{ type: "Event" }, { type: "JoinedEvents" }],
       async onQueryStarted({ eventId, userId }, { dispatch, queryFulfilled }) {
         const patch = dispatch(
           eventAPI.util.updateQueryData("getEventById", eventId, (draft) => {
@@ -132,5 +176,7 @@ export const {
   useGetJoinedEventsQuery,
   useJoinEventMutation,
   useLeaveEventMutation,
-  useGetUpcommingEventsQuery,
+  useSubscribeToEventMutation,
+  useUnsubscribeFromEventMutation,
+  useConfirmUnsubscribeFromEventMutation,
 } = eventAPI;

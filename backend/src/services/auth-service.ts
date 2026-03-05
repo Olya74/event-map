@@ -102,7 +102,7 @@ class AuthService {
       throw ErrorHandler.NotFoundError("User not found!");
     }
     const userDto = new UserDTO(user);
-    const tokens = tokenService.generateTokens({ ...userDto });
+    const tokens = tokenService.generateTokens({ ...userDto.toPayload() });
     await tokenService.saveToken(userDto, tokens.refreshToken);
     return { ...tokens, user: userDto };
   }

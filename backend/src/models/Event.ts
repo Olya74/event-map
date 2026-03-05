@@ -1,10 +1,8 @@
 import { Schema, Types, model } from "mongoose";
-import { EVENT_CATEGORIES, type  EventCategory } from "@event-map/shared";
+import { EVENT_CATEGORIES, type  EventCategory,EVENT_CATEGORY_KEYS } from "@event-map/shared";
 
 
-const EVENT_CATEGORY_KEYS = Object.keys(
-  EVENT_CATEGORIES
-) as EventCategory[];
+
 
 export interface IEventDocument {
   _id: Types.ObjectId;
@@ -42,7 +40,7 @@ const eventSchema = new Schema<IEventDocument>({
   },
   category: {
       type: String,
-       enum: Object.keys(EVENT_CATEGORIES),
+       enum: EVENT_CATEGORY_KEYS,
       required: true,
     },
 subCategory: {

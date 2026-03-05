@@ -40,7 +40,7 @@ MenuAccordion.Group = function ({
         thema === "dark"
           ? "sm:text-gray-800 sm:hover:text-yellow-300"
           : "sm:text-gray-100 text-amber-900 sm:hover:text-yellow-300"
-      } text-lg w-44  mx-auto sm:mx-0 flex flex-col  sm:items-start`}
+      } text-lg w-44  mx-auto sm:mx-0 flex flex-col  sm:items-start md:items-center `}
     >
       <button
         className="
@@ -96,8 +96,8 @@ MenuAccordion.Item = function MenuAccordionItem({
       end={false}
       className={
         match
-          ? "p-2 mb-2 block bg-gray-300 rounded"
-          : "p-2 mb-2 block hover:text-gray-800 sm:hover:bg-gray-600 rounded transition transform hover:scale-125 sm:hover:font-semibold"
+          ? "p-2 mb-2 block bg-gray-300 rounded "
+          : "md:hover:text-center md:hover:text-green-400 md:bg-gray-600  p-2  mb-2 block hover:text-gray-800 sm:hover:bg-gray-600  rounded transition transform hover:scale-125 sm:hover:font-semibold"
       }
     >
       {title}

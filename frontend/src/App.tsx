@@ -14,6 +14,7 @@ import CreateEvent from "./app/services/events/components/CreateEvent.tsx";
 import ActivateSuccess from "./pages/ActivateSuccess.tsx";
 import EventsContainer from "./app/services/events/components/EventsContainer.tsx";
 import WelcomePage from "./pages/WelcomePage.tsx";
+import UnSubscribePage from "./pages/UnSubscribePage.tsx";
 
 
 
@@ -50,6 +51,7 @@ const { refetch: refresh } = useRefreshQuery();
      <Route path="/map" element={<MapPage />} /> 
      <Route path="/events" element={<EventsContainer />} />
      <Route path="/events/:category/:subCategory" element={<EventsContainer />} />
+     <Route path="/unsubscribe" element={<UnSubscribePage />} />
     
     
           <Route path="/events/:id/media" element={<h4>Media</h4>} />
@@ -57,8 +59,10 @@ const { refetch: refresh } = useRefreshQuery();
           {/* protected routes */}
           <Route element={<RequireAuth />}>
          <Route path="profile" element={<Profile />} />
-           <Route path="/events/:id/event-edit/" element={<EventEdit />} />
+           <Route path="/events/:id/event-edit" element={<EventEdit />} />
            <Route path="/events/create-event" element={<CreateEvent />} />
+           
+           {/* <Route path="/confirm-unsubscribe" element={<UnSubscribePage />} /> */}
           </Route>
           <Route path="*" element={<h1>404 Not Found</h1>} />
           </Route>

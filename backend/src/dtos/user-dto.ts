@@ -14,6 +14,7 @@ class UserDTO {
   isActivated ;
   createdAt?;
   updatedAt?;
+  notification_settings?;
   constructor(model: IUser) {
     this.id = model._id;
     this.name = model.name;
@@ -21,11 +22,12 @@ class UserDTO {
     this.avatar = model.avatar || null;
     this.role = model.role ? model.role : "guest";
     this.isActivated = model.isActivated ?? false;
+    this.notification_settings = model.notification_settings ?? { email_notifications: false, push_notifications: false };
     this.createdAt = model.createdAt;
     this.updatedAt = model.updatedAt;
   }
   toPayload():MyJwtPayload {
-    return {id:this.id,email:this.email,role:this.role};
+    return {id:this.id.toString(),email:this.email,role:this.role};
   }
   }
 export default UserDTO;

@@ -36,3 +36,8 @@ EVENT-MAP/
 npm install
 npm run dev
 ```
+### in event-map\backend\src\services\mail-service.ts  
+######  ```to:process.env.EMAIL_USER replace with to```
+```
+ to:to 
+```

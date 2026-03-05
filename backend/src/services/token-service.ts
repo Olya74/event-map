@@ -1,12 +1,16 @@
 import jwt from "jsonwebtoken";
 import Token from "../models/Token.js";
 import "dotenv/config";
-import { IUser } from "../models/User.js";
 import UserDTO from "../dtos/user-dto.js";
 import { MyJwtPayload } from "../models/MyJwtPayload.js";
+import { Types } from "mongoose";
+import ErrorHandler from "src/exeptions/errorHandlung.js";
+
 
 export type AccessToken = string;
 export type RefreshToken = string;
+export type UnsubscribeToken = string;
+
 
 export interface ITokenPayload {
   accessToken: AccessToken;
@@ -67,6 +71,27 @@ class TokenService {
   async findToken(refreshToken: RefreshToken) {
     const tokenData = await Token.findOne({ refreshToken });
     return tokenData;
+  }
+  async generateUnsubscribeToken(userId:string, eventId:string) {
+   return jwt.sign(
+      { userId, eventId,type:"unsubscribe" },
+      process.env.JWT_UNSUBSCRIBE_SECRET!,
+      { expiresIn: "7d" }
+    );
+  }
+  async verifyUnsubscribeToken(token: UnsubscribeToken): Promise<{ userId: string; eventId: string }> {
+    try {
+      const payload = jwt.verify(
+        token,
+        process.env.JWT_UNSUBSCRIBE_SECRET!
+      ) as jwt.JwtPayload;
+      return {
+        userId: payload.userId,
+        eventId: payload.eventId,
+      };
+    } catch (e) {
+      return Promise.reject("Invalid or expired unsubscribe token");
+    }
   }
 }
 export default TokenService;
