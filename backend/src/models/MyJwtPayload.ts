@@ -1,6 +1,5 @@
-import { Schema, Types } from 'mongoose';
 export interface MyJwtPayload {
-  id: Types.ObjectId;
+  id: string;
   email: string;
   role: string;
 }

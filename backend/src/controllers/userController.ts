@@ -29,6 +29,27 @@ const createAvatar = async (
     next(error);
   }
 };
+const updateNotificationSettings = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.user?.id;
+      if (!userId) {
+      throw Error("Unauthorized");
+    }
+    const { email_notifications, push_notifications } = req.body;
+    const result = await userService.updateNotificationSettings(
+      userId,
+      email_notifications,
+      push_notifications
+    );
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 const getUserById = async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.user?.id;
   try {
@@ -47,4 +68,4 @@ const sendEmail = async (req: Request, res: Response, next: NextFunction) => {
     next(error);
   }
 };
-export { getUsers, createAvatar, getUserById, sendEmail };
+export { getUsers, createAvatar, getUserById, sendEmail , updateNotificationSettings};

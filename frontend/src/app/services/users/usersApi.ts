@@ -1,6 +1,9 @@
 import type { IAvatar, IUserResponse } from "../../models/UserTypes";
 import { apiSlice } from "../../api/apiSlice";
-import { updateAvatar } from "../../features/auth/authSlice";
+import {
+  updateAvatar,
+  updateUserNotificationSettings,
+} from "../../features/auth/authSlice";
 
 export const usersApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -10,8 +13,8 @@ export const usersApi = apiSlice.injectEndpoints({
         result
           ? [{ type: "User", id }]
           : error?.status === 401
-          ? ["UNAUTHORIZED"]
-          : ["UNKNOWN_ERROR"],
+            ? ["UNAUTHORIZED"]
+            : ["UNKNOWN_ERROR"],
     }),
     getUsers: builder.query<IUserResponse[], void>({
       query: () => "/users",
@@ -22,8 +25,32 @@ export const usersApi = apiSlice.injectEndpoints({
               { type: "User", id: "LIST" },
             ]
           : error?.status === 401
-          ? ["UNAUTHORIZED"]
-          : ["UNKNOWN_ERROR"],
+            ? ["UNAUTHORIZED"]
+            : ["UNKNOWN_ERROR"],
+    }),
+    updateNotificationSettings: builder.mutation<
+      { message: string },
+      { email_notifications: boolean; push_notifications: boolean }
+    >({
+      query: (body) => ({
+        url: "/users/notification-settings",
+        method: "PATCH",
+        body,
+      }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+
+          dispatch(
+            updateUserNotificationSettings({
+              email_notifications: arg.email_notifications,
+              push_notifications: arg.push_notifications,
+            }),
+          );
+        } catch (error) {
+          console.error("Failed to update notification settings", error);
+        }
+      },
     }),
     sendEmail: builder.mutation<
       any,
@@ -58,4 +85,6 @@ export const {
   useGetUserByIdQuery,
   useGetUsersQuery,
   useCreateAvatarMutation,
+  useUpdateNotificationSettingsMutation,
+  useSendEmailMutation,
 } = usersApi;

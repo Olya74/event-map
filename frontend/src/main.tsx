@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import { store } from "./app/stors/store";
 import { ThemaProvider } from "./context/ThemaContext.tsx";
 
+
 const container = document.getElementById("root");
 
 if (container) {

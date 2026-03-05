@@ -7,6 +7,7 @@ export type EventQueryResponse = {
   sortBy: string;
   sortDirection: "asc" | "desc";
   limit: number;
+  fromDate?: string;
 };
 
 export interface IEvent {
@@ -28,6 +29,7 @@ export interface IEvent {
   };
   creator: string;
   attendees: string[];
+  isSubscribed?: boolean;
   maxAttendees: number;
   isPaid: boolean;
   price?: number;

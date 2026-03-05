@@ -30,18 +30,25 @@ export const authSlice = createSlice({
     logOut: (state) => {
       state.user = null;
       state.token = null;
-      state.isAuthChecked = false;
+      state.isAuthChecked = true;
     },
     updateAvatar: (state, action: PayloadAction<IAvatar>) => {
       if (state.user) {
         state.user.avatar = action.payload;
       }
     },
-   
+   updateUserNotificationSettings: (state, action) => {
+  if (state.user) {
+    state.user.notification_settings = {
+      ...state.user.notification_settings,
+      ...action.payload,
+    };
+  }
+}
   },
 });
 
-export const { setCredentials, logOut } = authSlice.actions;
+export const { setCredentials, logOut, updateAvatar, updateUserNotificationSettings } = authSlice.actions;
 export default authSlice.reducer;
 export const selectedCurrentUser = (state: { auth: AuthState }) =>
   state.auth.user;
@@ -49,4 +56,4 @@ export const selectedCurrentToken = (state: { auth: AuthState }) =>
   state.auth.token;
 export const selectIsAuthChecked = (state: { auth: AuthState }) =>
   state.auth.isAuthChecked;
-export const { updateAvatar } = authSlice.actions;
+

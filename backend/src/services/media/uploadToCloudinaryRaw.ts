@@ -17,6 +17,24 @@ export const uploadToCloudinaryRaw = async (
     const result = await cloudinary.uploader.upload(file.path, {
       resource_type: file.mimetype.startsWith("video") ? "video" : "image",
        folder: `event-map/${folderName}/${userId}`,
+       transformation: [
+  {
+    width: 1600,
+    height: 900,
+    crop: "fill",
+    gravity: "auto", // автофокус
+    quality: "auto",
+    fetch_format: "auto"
+  }
+]
+  //        transformation: [
+  //   {
+  //     width: 1600,
+  //     crop: "limit",     // не увеличивает маленькие изображения
+  //     quality: "auto",   // авто-оптимизация
+  //     fetch_format: "auto" // webp/avif автоматически
+  //   }
+  // ]
     });
 
     await fs.unlink(file.path);

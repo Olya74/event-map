@@ -12,6 +12,11 @@ export interface IUserResponse {
   eventId: string[];
   createdAt: string;
   updatedAt: string;
+   notification_settings: {
+    email_notifications: boolean;
+    push_notifications: boolean;
+    sms_notifications: boolean;
+  };
 }
 
 export interface ILoginRequest {

@@ -13,6 +13,7 @@ export default function EventsDashboard({
   joinedEvents,
   loading,
 }: Props) {
+
   return (
     <>
       {loading ? (

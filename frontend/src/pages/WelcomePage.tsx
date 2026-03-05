@@ -1,16 +1,16 @@
 import CreateImage from "../components/slider/CreateImage.tsx";
-import UpcommingEvents from "../app/services/events/components/UpcommingEvents.tsx";
 import MenuAccordionListe from "../components/menu/MenuAccordionListe.tsx";
 import { images, type ImageItem } from "../helpers/functions/image.ts";
 import Slider from "../components/slider/Slider.tsx";
 import "./welcomePage.css";
 import { useThema } from "../context/ThemaContext.tsx";
+import EventsContainer from "../app/services/events/components/EventsContainer.tsx";
 
 function WelcomePage() {
   const { thema } = useThema();
   return (
     <div
-      className={`min-h-screen ${
+      className={` min-h-screen ${
         thema === "dark"
           ? "bg-white text-gray-800"
           : "bg-gray-900 text-yellow-300"
@@ -62,8 +62,8 @@ function WelcomePage() {
           </div>
         </section>
 
-        <aside className=" p-6 w-full md:w-1/3 justify-center items-center md:border-l ">
-          <UpcommingEvents />
+        <aside className=" w-full md:w-1/3 justify-center items-center md:border-l  text-gray-400 font-semibold mt-8 md:mt-0 md:ml-6 md:text-2xl">
+            <EventsContainer upcomingOnly={true} />
         </aside>
       </div>
     </div>

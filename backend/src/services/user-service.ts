@@ -9,6 +9,7 @@ import cloudinary from "../config/cloudinary.js";
 import { IAvatar } from "../models/IAvatar.js";
 import mailService from "./mail-service.js";
 
+
 class UserService {
   getUsers = async () => {
     const users = await User.find().populate("avatar");
@@ -16,6 +17,34 @@ class UserService {
       throw ErrorHandler.NotFoundError("No users found");
     }
     return users;
+  };
+
+  updateNotificationSettings = async (
+    userId: string,
+     email_notifications: boolean, 
+     push_notifications: boolean 
+  ) => {
+    if(!userId) {
+      throw ErrorHandler.ValidationError("User ID is required");
+    }
+    if (
+  typeof email_notifications !== "boolean" ||
+  typeof push_notifications !== "boolean"
+) {
+  throw ErrorHandler.ValidationError("Invalid settings");
+}
+
+    const user = await User.findById(userId);
+    if (!user) {
+      throw ErrorHandler.NotFoundError("User not found");
+    }
+    
+
+user.notification_settings.email_notifications = email_notifications;
+user.notification_settings.push_notifications = push_notifications;
+
+    await user.save();
+    return { message: "Notification settings updated successfully" };
   };
 
   createAvatar = async (
@@ -115,7 +144,7 @@ class UserService {
     }
   };
 
-  getUserById = async (userId: Types.ObjectId) => {
+  getUserById = async (userId: string) => {
     const user = await User.findById(userId).populate("avatar");
     if (!user) {
       throw ErrorHandler.NotFoundError("User not found");

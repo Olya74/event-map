@@ -1,20 +1,3 @@
-export const EVENT_TYPES = [
-  "Sports",
-  "Music",
-  "Art",
-  "Wedding",
-  "Culture",
-  "Technology",
-  "Food",
-  "Travel",
-  "Children_events",
-  "Other",
-] as const;
-
-
-
-export type EventType = typeof EVENT_TYPES[number];
-
 export const EVENT_STATUS = [
   "draft",
   "published",
@@ -38,5 +21,8 @@ export const EVENT_CATEGORIES = {
 } as const;
 
 export type EventCategory = keyof typeof EVENT_CATEGORIES;
+export const EVENT_CATEGORY_KEYS = Object.keys(
+  EVENT_CATEGORIES
+) as EventCategory[];
 export type EventSubCategory<T extends EventCategory> =
   typeof EVENT_CATEGORIES[T]["subcategories"][number];
