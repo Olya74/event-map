@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { rateLimit } from "express-rate-limit";
 import { registerValidator } from "../validators/auth/register.validator.js";
 import {
   registration,
@@ -7,12 +8,15 @@ import {
   refresh,
   logout,
 } from "../controllers/auth.controller.js";
-import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { loginValidator } from "../validators/auth/login.validator.js";
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+});
 
 const authRouter = Router();
-authRouter.post("/login", loginValidator, login);
-authRouter.post("/register",registerValidator, registration);
+authRouter.post("/login", authLimiter, loginValidator, login);
+authRouter.post("/register", authLimiter, registerValidator, registration);
 authRouter.get("/activate/:link", activate);
 authRouter.post("/logout", logout);
 authRouter.get("/refresh", refresh);

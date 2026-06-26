@@ -2,8 +2,8 @@ import fetch from "node-fetch";
 import AddressType from "../models/AddressType.js";
 
 interface NominatimResult {
-  lat: string; // приходит строкой
-  lon: string; // приходит строкой
+  lat: string; // coming as string
+  lon: string; // coming as string
   display_name?: string;
 }
 type AddressInput = AddressType | string;

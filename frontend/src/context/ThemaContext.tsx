@@ -22,12 +22,12 @@ export const ThemaProvider = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const [bgClass, setBgClass] = useState("");
 
-  // Переключение темы
+  // Toggle the theme between light and dark
   const toggleThema = useCallback(() => {
     setThema((prev) => (prev === "light" ? "dark" : "light"));
   }, []);
 
-  // Карта фоновых классов
+  // Map of background classes for different routes
   const backgroundMap: Record<string, string> = {
     "/": "bg-startseite",
     "/map": "bg-map",
@@ -38,7 +38,7 @@ export const ThemaProvider = ({ children }: { children: React.ReactNode }) => {
     "/*": "bg-default",
   };
 
-  // Обновляем фон и title при изменении пути или темы
+  // Update background and title when route or theme changes
   useEffect(() => {
     const baseClass = backgroundMap[location.pathname] || "bg-default";
     const combined = `${baseClass} ${thema}`;
@@ -60,7 +60,7 @@ export const ThemaProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// Хук для удобного доступа
+// Hook for convenient access
 export function useThema() {
   const context = useContext(ThemaContext);
   if (!context) {

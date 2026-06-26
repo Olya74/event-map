@@ -129,8 +129,8 @@ export default function Profile() {
   ];
 
   return (
-    <div className="max-w-[160rem] mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-4 gap-10 justify-center items-start">
-      <div className="lg:col-span-1 space-y-10 mr-20 sm:border-r sm:pr-20 border-gray-400 mx-auto">
+    <div className="max-w-[160rem] mx-auto px-4 py-6 grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]  gap-4 ">
+      <div className="md:col-span-1 space-y-10 sm:mr-20 md:mr-0 sm:border-r sm:pr-20 border-gray-400 justify-self-center">
         <div ref={successRef} role="status" aria-live="polite">
           {successMessage && <Succcess success={successMessage} />}
         </div>
@@ -253,9 +253,9 @@ export default function Profile() {
           </button>
         </section>
       </div>
-
+      
       {/* DASHBOARD AND STATS */}
-      <div className="lg:col-span-3 space-y-10">
+      <div className="lg:col-span-2 space-y-10 ">
         {/* STATS */}
         <section className="grid grid-cols-2 gap-4">
           {stats.map((s) => (

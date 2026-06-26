@@ -1,6 +1,4 @@
-import type e from "express";
-import type { IUserJwt } from "../../models/UserJwt";
-import { MyJwtPayload } from "../../models/MyJwtPayload.ts";
+import { MyJwtPayload } from "../../models/MyJwtPayload";
 
 declare global {
   namespace Express {

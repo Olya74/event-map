@@ -19,8 +19,8 @@ export default function EventsDashboard({
       {loading ? (
         <Loader />
       ) : (
-        <div className="space-y-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <section>
+           <div className="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] gap-6  p-4 justify-center"> 
+          <section >
             <h2 className="text-2xl font-semibold mb-4 text-gray-500 text-center">
               My Events
             </h2>
@@ -29,7 +29,7 @@ export default function EventsDashboard({
             )}
           </section>
 
-          <section>
+          <section >
             <h2 className="text-2xl font-semibold mb-4 text-gray-500 text-center">
               Joined Events
             </h2>

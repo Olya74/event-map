@@ -55,7 +55,6 @@ export const eventAPI = apiSlice.injectEndpoints({
         url: `/events/${id}/subscribe`,
         method: "POST",
       }),
-      // invalidatesTags: (result, error, id) => [{ type: "SubscribedEvent", id }],
       invalidatesTags: (result, error, id) => [
         { type: "Event", id },
         { type: "MyEvents" },

@@ -9,7 +9,7 @@ function Footer() {
      <address >
       Created by&nbsp;
       <a
-        href="https://www.linkedin.com/in/sergei-bogdanov-927ba5232/"
+        href="https://www.linkedin.com/in/olga-korkhova-310a7b234"
         target="_blank"
         rel="noopener noreferrer"
         className="underline"

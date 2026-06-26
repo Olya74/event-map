@@ -10,7 +10,7 @@ import { selectedCurrentUser } from "../../../features/auth/authSlice";
 
 
 interface EventsContainerProps {
-  upcomingOnly?: boolean; // 🔹 если true — показываем только будущие события
+  upcomingOnly?: boolean; // 🔹 if true — show only future events
 }
 
 function EventsContainer({ upcomingOnly = false }: EventsContainerProps): JSX.Element {
@@ -18,7 +18,7 @@ function EventsContainer({ upcomingOnly = false }: EventsContainerProps): JSX.El
   const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState("createdAt");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
-  // 🔹 Добавляем параметр fromDate для будущих событий
+  // 🔹 Adding the fromDate parameter for future events.
   const fromDate = upcomingOnly ? new Date().toISOString().split("T")[0] : undefined;
   const queryParams = { limit, page, sortBy, sortDirection, fromDate };
   const { category, subCategory } = useParams<{
@@ -26,7 +26,7 @@ function EventsContainer({ upcomingOnly = false }: EventsContainerProps): JSX.El
     subCategory?: string;
   }>();
   const currentUser = useAppSelector(selectedCurrentUser);
-  // 🔹 Получаем текущего пользователя через refreshQuery
+  // 🔹 get the current user via refreshQuery
   const { data: refreshData, isSuccess: refreshSuccess } = useRefreshQuery();
   const userId = refreshSuccess ? refreshData.userData.user.id : undefined;
 
@@ -40,7 +40,7 @@ function EventsContainer({ upcomingOnly = false }: EventsContainerProps): JSX.El
   } else {
     eventsQuery = useGetAllEventsQuery(
       { ...queryParams},
-     currentUser ? { skip: !refreshSuccess } : undefined // ждём пока подгрузится пользователь
+     currentUser ? { skip: !refreshSuccess } : undefined // waiting for the user to load
      
       
     );
@@ -63,8 +63,8 @@ useEffect(() => {
 
       {/* Controls */}
       {/* {!upcomingOnly && ( */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-6 bg-gray-200 p-4 rounded-xl shadow max-w-4xl mx-auto  justify-between">
-          <div className="flex flex-col gap-1">
+        <div className="flex flex-row flex-wrap gap-4 mb-6 bg-gray-200 p-4 rounded-xl shadow max-w-4xl mx-auto  justify-between">
+          <div className="flex flex-col gap-1 ">
             <span className="text-sm font-medium">Sort by</span>
             <select
               value={sortBy}

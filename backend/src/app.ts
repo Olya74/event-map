@@ -4,6 +4,8 @@ import express, {
   type Response,
   type NextFunction,
 } from "express";
+import helmet from "helmet";
+import { rateLimit } from "express-rate-limit";
 import cors from "cors";
 import "dotenv/config";
 import router from "./routes/router.js";
@@ -11,8 +13,8 @@ import cookieParser from "cookie-parser";
 import ErrorHandler from "./exeptions/errorHandlung.js";
 
 const app: Application = express();
-app.use(express.json());
-app.use(cookieParser());
+app.set("trust proxy", true);//for deploying behind a reverse proxy (like Nginx) to get the correct client IP address
+app.use(helmet());
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -20,6 +22,17 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   })
 );
+app.use(express.json());
+app.use(cookieParser());
+app.use(rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+}));
+
+
+
 
 app.use("/api", router);
 app.use(

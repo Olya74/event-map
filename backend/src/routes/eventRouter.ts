@@ -17,7 +17,7 @@ eventRouter.route('/create-event').post(authMiddleware, uploadEventMedia, create
 eventRouter.route('/my-events').get( authMiddleware, getMyEvents);
 eventRouter.route('/joined').get( authMiddleware, getJoinedEvents);
 eventRouter.route('/upcomming').get(getUpcommingEvents);
-// отписка ИЗ ПИСЬМА (без auth)
+//unsubscribe from event by link
 eventRouter.route('/unsubscribe').get(unsubscribeFromEventByLink);
 // 
  eventRouter.route('/unsubscribe-confirm').post(unsubscribeFromEventByLink);
