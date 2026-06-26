@@ -3,8 +3,6 @@ import Token from "../models/Token.js";
 import "dotenv/config";
 import UserDTO from "../dtos/user-dto.js";
 import { MyJwtPayload } from "../models/MyJwtPayload.js";
-import { Types } from "mongoose";
-import ErrorHandler from "src/exeptions/errorHandlung.js";
 
 
 export type AccessToken = string;

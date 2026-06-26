@@ -9,12 +9,12 @@ export const optionalAuth = (
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    return next(); // гость
+    return next(); // 
   }
 
   const token = authHeader.split(" ")[1];
   if (!token) {
-    return next(); // гость
+    return next(); // guest user, no token provided
   }
 
   try {
@@ -29,7 +29,7 @@ export const optionalAuth = (
       };
     }
   } catch {
-    // игнорируем ошибку → считаем гостем
+    // ignore errors and proceed as a guest user if token validation fails
   }
 
   return next();

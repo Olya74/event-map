@@ -81,7 +81,7 @@ export default function CreateEvent() {
     setFormEvent((prev) => ({
       ...prev,
       category: value,
-      subCategory: "", // сбрасываем
+      subCategory: "", // reset subCategory when category changes
     }));
     return;
   }

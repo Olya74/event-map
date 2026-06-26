@@ -36,9 +36,9 @@ class EventService {
     const skip = (page - 1) * limit;
     const query: any = {};
     if (fromDate) {
-      query.date = { $gte: new Date(fromDate) }; // 🔹 только будущие события
+      query.date = { $gte: new Date(fromDate) }; // 🔹 only future events
     }
-    // 1️⃣ Получаем события
+    // 1️⃣ Get events with pagination and sorting
     const events = await Event.find(query)
       .sort({ [sortBy]: sortDirection === "asc" ? 1 : -1 })
       .skip(skip)
@@ -55,7 +55,7 @@ class EventService {
       subscriptions.map((s) => s.eventId.toString()),
     );
 
-    //2️⃣Добавляем isSubscribed
+    //2️⃣adding isSubscribed
     return this.attachSubscriptionFlag(events, subscribedEventIds);
   }
 
@@ -236,7 +236,7 @@ class EventService {
       let uploadedCloudinary: CloudinaryDeleteDTO[] = [];
       let session: ClientSession | null = null;
       try {
-        // ☁️ side-effect ДО транзакции
+        // ☁️ side-effect before transaction: upload files to Cloudinary
         if (files && files.length > 0) {
           uploadedCloudinary = await uploadToCloudinaryRaw(
             files,

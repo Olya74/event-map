@@ -10,6 +10,7 @@ function WelcomePage() {
   const { thema } = useThema();
   return (
     <div
+   
       className={` min-h-screen ${
         thema === "dark"
           ? "bg-white text-gray-800"

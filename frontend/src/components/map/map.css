@@ -4,5 +4,5 @@
   background-position: center;
   color: transparent;
   background-clip: text;
-  -webkit-background-clip: text; /* обязательно */
+  -webkit-background-clip: text; 
 }

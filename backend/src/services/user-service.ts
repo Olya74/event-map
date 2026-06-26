@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 import ErrorHandler from "../exeptions/errorHandlung.js";
-import User, { IUser } from "../models/User.js";
+import User from "../models/User.js";
 import mongoose from "mongoose";
 import { CloudinaryDeleteDTO } from "./media/types/cloudinaryDeleteDto.js";
 import { uploadAvatarToCloudinaryRaw } from "./media/uploadAvatarToCloudinaryRaw.js";
@@ -90,7 +90,7 @@ user.notification_settings.push_notifications = push_notifications;
         { session }
       );
 
-      // ⚠️ старый аватар
+      // ⚠️ old avatar
       if (user.avatar) {
         oldAvatarToDelete = await Media.findByIdAndDelete(user.avatar).session(
           session
@@ -102,7 +102,7 @@ user.notification_settings.push_notifications = push_notifications;
 
       await session.commitTransaction();
 
-      // 🔥 Cloudinary cleanup старого аватара ПОСЛЕ commit
+      // 🔥 Cloudinary cleanup old avatar AFTER commit
       if (oldAvatarToDelete) {
         const response = await cloudinary.uploader.destroy(
           oldAvatarToDelete.public_id,
@@ -127,7 +127,7 @@ user.notification_settings.push_notifications = push_notifications;
     } catch (error) {
       await session.abortTransaction();
 
-      // ❗ cleanup нового upload
+      // ❗ cleanup new upload
       if (uploadedResult) {
         try {
           await cloudinary.uploader.destroy(uploadedResult.public_id, {

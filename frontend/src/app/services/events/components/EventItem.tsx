@@ -95,7 +95,7 @@ const handleJoinToggle = async (idEvent: string,idUser: string) => {
   };
 
   return (
-    <article className="max-w-2xl mx-auto w-full  bg-gray-200 rounded-2xl shadow-md p-6 flex flex-col transition hover:shadow-lg">
+    <article className="max-w-sm  mx-auto  bg-gray-200 rounded-2xl shadow-md p-6 flex flex-col transition hover:shadow-lg">
       {/* FEEDBACK */}
       {errorMsg && <ErrorMessage error={errorMsg} />}
       {successMsg && <Success success={successMsg} />}
@@ -110,8 +110,8 @@ const handleJoinToggle = async (idEvent: string,idUser: string) => {
       </header>
 
       {/* DESCRIPTION */}
-      <section className="mb-4 flex-1 text-sm md:text-xl">
-      <p className="text-gray-700 leading-relaxed line-clamp-3 mb-4">
+      <section className="mb-4 flex-1 text-md md:text-xl">
+      <p className="text-gray-700 leading-relaxed line-clamp-3 mb-4 h-20 md:h-24">
         {event.description}
       </p>
       </section>
@@ -148,10 +148,10 @@ const handleJoinToggle = async (idEvent: string,idUser: string) => {
       {/* ACTIONS */}
       <footer className="mt-auto pt-4 border-t border-gray-600 flex justify-between items-center h-28 ">
         {!isOwner ? (
-          <div className="flex gap-4 justify-between items-center w-full">
+          <div className="flex gap-4 justify-between items-center w-full ">
           <button
             className={`
-    px-4 py-2 rounded-lg transition
+    px-4 py-2 rounded-md transition 
     ${isJoined
       ? "bg-green-600 text-white cursor-default"
       : "border border-green-600 text-green-600 hover:bg-green-600 hover:text-white"}
@@ -171,7 +171,7 @@ const handleJoinToggle = async (idEvent: string,idUser: string) => {
       : handleSubscribe(event._id)
   }
 >
-      {isSubscribed ? "🔔 subscribed " : "subscribe"}
+      {isSubscribed ? "🔔 Subscribed " : "Subscribe"}
 </button>
 {!currentUser?.notification_settings.email_notifications && <button  className="bg-green-600 px-4 py-2 truncate rounded-md text-white hover:bg-green-800 transition hover:text-wrap hover:text-left" onClick={() => navigate("/profile/notifications")}
  >✉ enable notification</button>}
